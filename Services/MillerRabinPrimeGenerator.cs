@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace ECDH.Models
+namespace ECDH.Services
 {
     class MillerRabinPrimeGenerator(int precisionFactor = 10)
     {
@@ -22,11 +22,11 @@ namespace ECDH.Models
             return number;
         }
 
-        private bool IsPrimeNumber(BigInteger number)
+        public bool IsPrimeNumber(BigInteger number)
         {
             // ToDo: Реализовать проверку числа на простоту с указанной точностью 'precision'
 
-            return false;
+            throw new NotImplementedException();
         }
     }
 }
