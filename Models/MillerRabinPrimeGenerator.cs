@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace ECDH.Models
 {
-    class MillerRabinPrimeGenerator
+    class MillerRabinPrimeGenerator(int precisionFactor = 10)
     {
-        private readonly double _precision;
-        public double Precision => _precision;
-
-        public MillerRabinPrimeGenerator(double precision)
-        {
-            _precision = precision;
-        }
+        private readonly int _precisionFactor = precisionFactor;
+        public int PrecisionFactor => _precisionFactor;
 
         public BigInteger GeneratePrimeNumber()
         {
-            // ToDo: Реализовать основную функцию для генерации простого числа на основе Теста Миллера-Рабина
-            // Для генерации числа простого числа P использовать алгоритм хэширования SHA-256
+            var rnd = new Random();
+            BigInteger number;
 
-            return 0;
+            do
+            {
+                number = new BigInteger(SHA256.HashData(RandomNumberGenerator.GetBytes(rnd.Next())));
+            } while (!IsPrimeNumber(number));
+
+            return number;
         }
 
         private bool IsPrimeNumber(BigInteger number)
