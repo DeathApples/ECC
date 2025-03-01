@@ -16,7 +16,7 @@ namespace ECDH.Models
 
             do
             {
-                number = new BigInteger(SHA256.HashData(RandomNumberGenerator.GetBytes(rnd.Next())));
+                number = new BigInteger(SHA256.HashData(RandomNumberGenerator.GetBytes(rnd.Next(256))), true);
             } while (!IsPrimeNumber(number));
 
             return number;
