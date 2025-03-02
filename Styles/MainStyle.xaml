@@ -4,20 +4,29 @@
 
 
     
-    <Style x:Key="GraphicBorder" TargetType="Border">
+    <Style x:Key="TileBorder" TargetType="Border">
         <Style.Setters>
-            <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Height" Value="340" />
             <Setter Property="Width" Value="320" />
+            <Setter Property="Height" Value="340" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Margin" Value="0, 15, 15, 0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="#323232" />
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="StatusBorder" TargetType="Border" BasedOn="{StaticResource TileBorder}">
+        <Style.Setters>
+            <Setter Property="Width" Value="990" />
+            <Setter Property="Height" Value="auto" />
         </Style.Setters>
     </Style>
     
     
     
-    <Style x:Key="TitleGraphicTextBlock" TargetType="TextBlock">
+    <Style x:Key="TitleTextBlock" TargetType="TextBlock">
         <Style.Setters>
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="Snow" />
@@ -36,5 +45,7 @@
             <Setter Property="Width" Value="300" />
         </Style.Setters>
     </Style>
+    
+    
 
 </ResourceDictionary>

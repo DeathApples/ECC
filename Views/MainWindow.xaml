@@ -7,7 +7,7 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:ECDH"
         
-        ResizeMode="NoResize" Height="600" Width="900"
+        ResizeMode="NoResize" Height="820" Width="1035"
         WindowStartupLocation="CenterScreen" 
         Title="ECDH">
 
@@ -26,17 +26,21 @@
     <Grid Background="#424242">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GraphicBorder}">
+        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource TileBorder}">
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource TileBorder}">
             <Grid>
 
                 <Grid.RowDefinitions>
@@ -45,9 +49,9 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
-                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 8, 0, 0"
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0, 8, 0, 0"
                                Text="Эллиптическая кривая" />
-                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 0, 0, 0"
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0, 0, 0, 0"
                                Text="{Binding EllipticCurve}" />
                 </StackPanel>
 
@@ -57,24 +61,22 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource GraphicBorder}">
-            <Grid>
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource TileBorder}">
+        </Border>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="990"
+                Style="{StaticResource TileBorder}">
+            <Button Height="32" Width="120" Content="Action" Command="{Binding ActionCommand}"/>
+        </Border>
 
-                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
-                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 8, 0, 0"
-                               Text="Эллиптическая кривая" />
-                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 0, 0, 0"
-                               Text="{Binding EllipticCurve}" />
-                </StackPanel>
-
-                <oxy:PlotView Grid.Row="1" Style="{StaticResource GraphicPlotView}" />
-
-            </Grid>
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                Style="{StaticResource StatusBorder}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource TitleTextBlock}" Margin="12, 8, 0, 8"
+                           Text="p = " HorizontalAlignment="Left" />
+                <TextBlock Style="{StaticResource TitleTextBlock}" Margin="2, 8, 0, 8"
+                           Text="{Binding PrimeNumber}" HorizontalAlignment="Left" />
+            </StackPanel>
         </Border>
 
     </Grid>

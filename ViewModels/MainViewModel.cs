@@ -1,7 +1,10 @@
 ﻿using System;
 using OxyPlot;
+using System.Numerics;
+using System.Windows.Input;
 
 using ECDH.Models;
+using ECDH.Commands;
 using ECDH.Services;
 
 namespace ECDH.ViewModels
@@ -15,6 +18,13 @@ namespace ECDH.ViewModels
             set => SetProperty(ref _ellipticCurve, value);
         }
 
+        private BigInteger _primeNumber;
+        public BigInteger PrimeNumber
+        {
+            get => _primeNumber;
+            set => SetProperty(ref _primeNumber, value);
+        }
+
         private PlotModel _curvePlotModel;
         public PlotModel CurvePlotModel
         {
@@ -22,12 +32,28 @@ namespace ECDH.ViewModels
             set => SetProperty(ref _curvePlotModel, value);
         }
 
+        public ICommand ActionCommand { get; }
+        private void OnActionCommandExecuted(object? parameter)
+        {
+            //var rnd = new Random();
+            //EllipticCurve = new EllipticCurve { a = rnd.Next(32) - 16, b = rnd.Next(32) - 16 };
+            //var curvePlotModel = OxyplotService.CreatePlotModel();
+            //OxyplotService.DrawEllipticCurve(curvePlotModel, EllipticCurve);
+
+            //CurvePlotModel = curvePlotModel;
+
+            var primeGenerator = new MillerRabinPrimeGenerator();
+            PrimeNumber = primeGenerator.GeneratePrimeNumber();
+        }
+
         public MainViewModel()
         {
-            _ellipticCurve = new EllipticCurve { a = -4, b = 1 };
-            _curvePlotModel = OxyplotService.CreatePlotModel();
+            ActionCommand = new RelayCommand(OnActionCommandExecuted);
 
-            OxyplotService.DrawEllipticCurve(_curvePlotModel, _ellipticCurve);
+            _curvePlotModel = OxyplotService.CreatePlotModel();
+            _ellipticCurve = new EllipticCurve { a = -2, b = 5 };
+
+            OxyplotService.DrawEllipticCurve(CurvePlotModel, EllipticCurve);
         }
     }
 }

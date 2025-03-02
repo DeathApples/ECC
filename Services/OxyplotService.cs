@@ -16,8 +16,8 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = 6,
-                Minimum = -6,
+                Maximum = 7,
+                Minimum = -7,
                 Position = AxisPosition.Left,
                 PositionAtZeroCrossing = true,
                 AxislineStyle = LineStyle.Solid,
@@ -30,8 +30,8 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = 6,
-                Minimum = -6,
+                Maximum = 7,
+                Minimum = -7,
                 Position = AxisPosition.Bottom,
                 PositionAtZeroCrossing = true,
                 AxislineStyle = LineStyle.Solid,
@@ -53,7 +53,7 @@ namespace ECDH.Services
             int a = (int)ellipticCurve.a, b = (int)ellipticCurve.b;
             var lineSeries = new LineSeries { Color = OxyColors.Orange, StrokeThickness = 2 };
 
-            if (ellipticCurve.Discriminant > 0)
+            if (ellipticCurve.Discriminant >= 0)
             {
                 for (double i = size; i > -size; i -= 0.01)
                 {

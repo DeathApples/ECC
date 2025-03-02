@@ -17,7 +17,7 @@ namespace ECDH.Models
             string formula = "y² = x³";
 
             if (a != 0)
-                formula += a < 0 ? $" - {Math.Abs((int)a)}x" : $" + {a}x";
+                formula += a == 1 ? " + x" : a == -1 ? " - x" : a < 0 ? $" - {Math.Abs((int)a)}x" : $" + {a}x";
 
             if (b != 0)
                 formula += b < 0 ? $" - {Math.Abs((int)b)}" : $" + {b}";

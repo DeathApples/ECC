@@ -4,11 +4,8 @@ using System.Security.Cryptography;
 
 namespace ECDH.Services
 {
-    class MillerRabinPrimeGenerator()
+    public class MillerRabinPrimeGenerator()
     {
-        //private readonly int _precisionFactor = precisionFactor;
-        //public int PrecisionFactor => _precisionFactor;
-
         public int PrecisionFactor { get; private set; } = 10;
 
         public BigInteger GeneratePrimeNumber()
@@ -28,7 +25,7 @@ namespace ECDH.Services
         {
             // ToDo: Реализовать проверку числа на простоту с указанной точностью 'precision'
 
-            throw new NotImplementedException();
+            return true;
         }
     }
 }
