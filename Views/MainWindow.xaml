@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ECDH.ViewModels"
+        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:ECDH"
         
-        Title="ECDH" Height="450" Width="800">
+        ResizeMode="NoResize" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen" 
+        Title="ECDH">
 
     <Window.DataContext>
         <vm:MainViewModel />
@@ -20,10 +23,60 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
-        
-        
-        
+    <Grid Background="#424242">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GraphicBorder}">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
+                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 8, 0, 0"
+                               Text="Эллиптическая кривая" />
+                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 0, 0, 0"
+                               Text="{Binding EllipticCurve}" />
+                </StackPanel>
+
+                <oxy:PlotView Grid.Row="1" Style="{StaticResource GraphicPlotView}"
+                             Model="{Binding CurvePlotModel}" />
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource GraphicBorder}">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
+                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 8, 0, 0"
+                               Text="Эллиптическая кривая" />
+                    <TextBlock Style="{StaticResource TitleGraphicTextBlock}" Margin="0, 0, 0, 0"
+                               Text="{Binding EllipticCurve}" />
+                </StackPanel>
+
+                <oxy:PlotView Grid.Row="1" Style="{StaticResource GraphicPlotView}" />
+
+            </Grid>
+        </Border>
+
     </Grid>
     
 </Window>

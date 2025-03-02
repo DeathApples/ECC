@@ -1,6 +1,40 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:oxy="http://oxyplot.org/wpf">
+
+
+    
+    <Style x:Key="GraphicBorder" TargetType="Border">
+        <Style.Setters>
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Height" Value="340" />
+            <Setter Property="Width" Value="320" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="#323232" />
+        </Style.Setters>
+    </Style>
     
     
     
+    <Style x:Key="TitleGraphicTextBlock" TargetType="TextBlock">
+        <Style.Setters>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="Snow" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0" />
+        </Style.Setters>
+    </Style>
+    
+    
+
+    <Style x:Key="GraphicPlotView" TargetType="oxy:PlotView">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="-18, 0, 0, -18" />
+            <Setter Property="Height" Value="300" />
+            <Setter Property="Width" Value="300" />
+        </Style.Setters>
+    </Style>
+
 </ResourceDictionary>

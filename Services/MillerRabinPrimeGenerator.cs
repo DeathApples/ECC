@@ -4,10 +4,12 @@ using System.Security.Cryptography;
 
 namespace ECDH.Services
 {
-    class MillerRabinPrimeGenerator(int precisionFactor = 10)
+    class MillerRabinPrimeGenerator()
     {
-        private readonly int _precisionFactor = precisionFactor;
-        public int PrecisionFactor => _precisionFactor;
+        //private readonly int _precisionFactor = precisionFactor;
+        //public int PrecisionFactor => _precisionFactor;
+
+        public int PrecisionFactor { get; private set; } = 10;
 
         public BigInteger GeneratePrimeNumber()
         {
