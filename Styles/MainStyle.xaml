@@ -23,19 +23,104 @@
             <Setter Property="Height" Value="auto" />
         </Style.Setters>
     </Style>
-    
-    
-    
+
+
+
+    <Style x:Key="ParameterStackPanel" TargetType="StackPanel">
+        <Style.Setters>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style.Setters>
+    </Style>
+
+
+
     <Style x:Key="TitleTextBlock" TargetType="TextBlock">
         <Style.Setters>
             <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="Snow" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="Margin" Value="0" />
         </Style.Setters>
     </Style>
+
     
+
+    <Style x:Key="ParameterTextBox" TargetType="TextBox">
+        <Style.Setters>
+            
+            <Setter Property="Background" Value="#323232" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Foreground" Value="Snow" />
+
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Margin" Value="8, 0, 0, 0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Width" Value="270" />
+            <Setter Property="Height" Value="36" />
+            
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8">
+                            <ScrollViewer Margin="5" x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+        </Style.Setters>
+    </Style>
+
+
+
+    <Style x:Key="ActionButton" TargetType="Button">
+
+        <Style.Setters>
+
+            <Setter Property="Background" Value="#323232" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Foreground" Value="Snow" />
+
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Width" Value="142" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style.Setters>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#282828"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#000000" />
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
     
+
 
     <Style x:Key="GraphicPlotView" TargetType="oxy:PlotView">
         <Style.Setters>

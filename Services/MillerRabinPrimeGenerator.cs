@@ -6,16 +6,16 @@ namespace ECDH.Services
 {
     public class MillerRabinPrimeGenerator()
     {
-        public int PrecisionFactor { get; private set; } = 10;
+        public int PrecisionFactor { get; private set; } = 100;
 
-        public BigInteger GeneratePrimeNumber()
+        public BigInteger GeneratePrimeNumber(bool isLarge = true)
         {
             var rnd = new Random();
             BigInteger number;
 
             do
             {
-                number = new BigInteger(SHA256.HashData(RandomNumberGenerator.GetBytes(rnd.Next(256))), true);
+                number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(32), true) : rnd.Next(11, 1000);
             } while (!IsPrimeNumber(number));
 
             return number;

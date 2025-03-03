@@ -8,19 +8,19 @@ namespace ECDH.Services
 {
     public static class OxyplotService
     {
-        public static PlotModel CreatePlotModel()
+        public static PlotModel CreatePlotModel(int p = 0)
         {
-            var curvePlotModel = new PlotModel();
-            curvePlotModel.PlotAreaBorderThickness = new OxyThickness(0);
+            var curvePlotModel = new PlotModel { PlotAreaBorderThickness = new OxyThickness(0) };
             curvePlotModel.Axes.Clear();
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = 7,
-                Minimum = -7,
+                Maximum = p == 0 ? 7 : p,
+                Minimum = p == 0 ? -7 : 0,
                 Position = AxisPosition.Left,
-                PositionAtZeroCrossing = true,
+                PositionAtZeroCrossing = p == 0,
                 AxislineStyle = LineStyle.Solid,
+                MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
@@ -30,11 +30,12 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = 7,
-                Minimum = -7,
+                Maximum = p == 0 ? 7 : p,
+                Minimum = p == 0 ? -7 : 0,
                 Position = AxisPosition.Bottom,
-                PositionAtZeroCrossing = true,
+                PositionAtZeroCrossing = p == 0,
                 AxislineStyle = LineStyle.Solid,
+                MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
@@ -121,6 +122,13 @@ namespace ECDH.Services
                 lineSeries.Points.Add(lineSeries.Points[0]);
                 curvePlotModel.Series.Add(lineSeries);
             }
+        }
+
+        public static void DrawPointTable(PlotModel curvePlotModel, EllipticCurve ellipticCurve)
+        {
+            curvePlotModel.Series.Clear();
+
+
         }
     }
 }

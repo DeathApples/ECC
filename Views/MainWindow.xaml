@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ECDH.ViewModels"
+        xmlns:vr="clr-namespace:ECDH.Validators"
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:ECDH"
         
@@ -38,6 +39,71 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource TileBorder}">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Style="{StaticResource ParameterStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="a:" />
+                    <TextBox Style="{StaticResource ParameterTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="ParameterA" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <vr:ParameterValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Style="{StaticResource ParameterStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="b:" />
+                    <TextBox Style="{StaticResource ParameterTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="ParameterB" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <vr:ParameterValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Style="{StaticResource ParameterStackPanel}">
+                    <Button Style="{StaticResource ActionButton}" Margin="0, 0, 8, 0" Content="Построить график"
+                            Command="{Binding CreateEllipticCurveCommand}" />
+                    <Button Style="{StaticResource ActionButton}" Content="Подобрать параметры"
+                            Command="{Binding GenerateParametrsCommand}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Style="{StaticResource ParameterStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="p:" />
+                    <TextBox Style="{StaticResource ParameterTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="PrimeNumber" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <vr:ParameterValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Style="{StaticResource ParameterStackPanel}">
+                    <Button Style="{StaticResource ActionButton}" Margin="0, 0, 8, 0" Content="Построить таблицу"
+                            Command="{Binding CreatePointTableCommand}" />
+                    <Button Style="{StaticResource ActionButton}" Content="Подобрать число p"
+                            Command="{Binding GeneratePrimeCommand}" />
+                </StackPanel>
+
+            </Grid>
         </Border>
 
         <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource TileBorder}">
@@ -62,11 +128,34 @@
         </Border>
 
         <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource TileBorder}">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0, 8, 0, 0"
+                               Text="Таблица точек эллиптической кривой" />
+                </StackPanel>
+
+                <oxy:PlotView Grid.Row="1" Style="{StaticResource GraphicPlotView}" Margin="-10, 8, 0, 0"
+                              Model="{Binding TablePlotModel}" />
+
+            </Grid>
         </Border>
 
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Width="990"
                 Style="{StaticResource TileBorder}">
-            <Button Height="32" Width="120" Content="Action" Command="{Binding ActionCommand}"/>
+            <Grid>
+                <Button Height="32" Width="120" Content="Action" Command="{Binding ActionCommand}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12, 8">
+                    <TextBlock Text="Визуализация: " Foreground="Snow" FontSize="16" />
+                    <ToggleButton Height="24" Width="120" />
+                </StackPanel>
+            </Grid>
+            
         </Border>
 
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
