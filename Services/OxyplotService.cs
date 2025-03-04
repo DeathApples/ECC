@@ -20,11 +20,13 @@ namespace ECDH.Services
                 Position = AxisPosition.Left,
                 PositionAtZeroCrossing = p == 0,
                 AxislineStyle = LineStyle.Solid,
+                MinorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
                 TicklineColor = OxyColor.FromRgb(180, 180, 180),
+                MinorGridlineColor = OxyColor.FromRgb(70, 70, 70),
                 MajorGridlineColor = OxyColor.FromRgb(100, 100, 100)
             });
 
@@ -35,11 +37,13 @@ namespace ECDH.Services
                 Position = AxisPosition.Bottom,
                 PositionAtZeroCrossing = p == 0,
                 AxislineStyle = LineStyle.Solid,
+                MinorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
                 TicklineColor = OxyColor.FromRgb(180, 180, 180),
+                MinorGridlineColor = OxyColor.FromRgb(70, 70, 70),
                 MajorGridlineColor = OxyColor.FromRgb(100, 100, 100)
             });
 
