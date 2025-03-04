@@ -98,6 +98,10 @@ namespace ECDH.ViewModels
             if (!int.TryParse(PrimeNumber, out var p))
                 return;
 
+            var primeGenerator = new MillerRabinPrimeGenerator();
+            if (!primeGenerator.IsPrimeNumber(p))
+                return;
+
             EllipticCurve.p = p;
             var tablePlotModel = OxyplotService.CreatePlotModel(p);
             OxyplotService.DrawPointTable(tablePlotModel, EllipticCurve);
