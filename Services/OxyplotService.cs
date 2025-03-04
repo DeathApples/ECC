@@ -124,11 +124,36 @@ namespace ECDH.Services
             }
         }
 
-        public static void DrawPointTable(PlotModel curvePlotModel, EllipticCurve ellipticCurve)
+        public static void DrawPointTable(PlotModel tablePlotModel, EllipticCurve ellipticCurve)
         {
-            curvePlotModel.Series.Clear();
+            tablePlotModel.Series.Clear();
 
+            var scatterSeries = new ScatterSeries
+            {
+                MarkerFill = OxyColors.Transparent, 
+                MarkerStroke = OxyColors.Orange,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 3
+            };
 
+            int a = (int)ellipticCurve.a, b = (int)ellipticCurve.b, p = (int)ellipticCurve.p;
+            var leftSide = new List<int>(); var rightSide = new List<int>();
+            for (int i = 0; i < p; i++)
+            {
+                leftSide.Add(i * i % p);
+                rightSide.Add((i * i * i + a * i + b) % p );
+            }
+
+            for (int i = 0; i < p; i++)
+            {
+                for (int k = 0; k < p; k++)
+                {
+                    if (leftSide[i] == rightSide[k])
+                        scatterSeries.Points.Add(new ScatterPoint(k, i));
+                }
+            }
+
+            tablePlotModel.Series.Add(scatterSeries);
         }
     }
 }

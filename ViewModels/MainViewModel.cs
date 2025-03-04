@@ -93,9 +93,12 @@ namespace ECDH.ViewModels
         public ICommand CreatePointTableCommand { get; }
         private void OnCreatePointTableCommandExecuted(object? parameter)
         {
+            OnCreateEllipticCurveCommandExecuted(null);
+
             if (!int.TryParse(PrimeNumber, out var p))
                 return;
 
+            EllipticCurve.p = p;
             var tablePlotModel = OxyplotService.CreatePlotModel(p);
             OxyplotService.DrawPointTable(tablePlotModel, EllipticCurve);
 
@@ -118,11 +121,12 @@ namespace ECDH.ViewModels
             CreateEllipticCurveCommand = new RelayCommand(OnCreateEllipticCurveCommandExecuted);
 
             _curvePlotModel = OxyplotService.CreatePlotModel();
-            _tablePlotModel = OxyplotService.CreatePlotModel(47);
+            _tablePlotModel = OxyplotService.CreatePlotModel(19);
 
-            _ellipticCurve = new EllipticCurve { a = -2, b = 5 };
-            _parameterA = "-2"; _parameterB = "5"; _primeNumber = "47";
+            _parameterA = "-7"; _parameterB = "10"; _primeNumber = "19";
+            _ellipticCurve = new EllipticCurve { a = -7, b = 10, p = 19 };
 
+            OxyplotService.DrawPointTable(TablePlotModel, EllipticCurve);
             OxyplotService.DrawEllipticCurve(CurvePlotModel, EllipticCurve);
         }
     }
