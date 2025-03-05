@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Security.Cryptography;
 
 namespace ECDH.Services
@@ -15,7 +14,7 @@ namespace ECDH.Services
 
             do
             {
-                number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(32), true) : rnd.Next(11, 1000);
+                number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(32), true) : rnd.Next(11, 500);
             } while (!IsPrimeNumber(number));
 
             return number;
@@ -23,7 +22,51 @@ namespace ECDH.Services
 
         public bool IsPrimeNumber(BigInteger number)
         {
-            // ToDo: Реализовать проверку числа на простоту с указанной точностью 'precision'
+            if (number == 2 || number == 3)
+                return true;
+
+            if (number < 2 || number % 2 == 0)
+                return false;
+
+            BigInteger t = number - 1;
+
+            int s = 0;
+
+            while (t % 2 == 0)
+            {
+                t /= 2;
+                s += 1;
+            }
+
+            for (int i = 0; i < PrecisionFactor; i++)
+            {
+                BigInteger a;
+
+                do
+                {
+                    a = new BigInteger(RandomNumberGenerator.GetBytes(number.ToByteArray().Length));
+                }
+                while (a < 2 || a >= number - 2);
+
+                BigInteger x = BigInteger.ModPow(a, t, number);
+
+                if (x == 1 || x == number - 1)
+                    continue;
+
+                for (int r = 1; r < s; r++)
+                {
+                    x = BigInteger.ModPow(x, 2, number);
+
+                    if (x == 1)
+                        return false;
+
+                    if (x == number - 1)
+                        break;
+                }
+
+                if (x != number - 1)
+                    return false;
+            }
 
             return true;
         }

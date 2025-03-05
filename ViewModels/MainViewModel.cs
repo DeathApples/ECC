@@ -1,5 +1,4 @@
-﻿using System;
-using OxyPlot;
+﻿using OxyPlot;
 using System.Windows.Input;
 
 using ECDH.Models;
@@ -83,7 +82,9 @@ namespace ECDH.ViewModels
             if (!int.TryParse(ParameterB, out var b))
                 return;
 
-            EllipticCurve = new EllipticCurve { a = a, b = b };
+            EllipticCurve.a = a;
+            EllipticCurve.b = b;
+
             var curvePlotModel = OxyplotService.CreatePlotModel();
             OxyplotService.DrawEllipticCurve(curvePlotModel, EllipticCurve);
 
@@ -128,7 +129,10 @@ namespace ECDH.ViewModels
             _tablePlotModel = OxyplotService.CreatePlotModel(19);
 
             _parameterA = "-7"; _parameterB = "10"; _primeNumber = "19";
-            _ellipticCurve = new EllipticCurve { a = -7, b = 10, p = 19 };
+            _ellipticCurve = EllipticCurve.Instance;
+            _ellipticCurve.a = -7;
+            _ellipticCurve.b = 10;
+            _ellipticCurve.p = 19;
 
             OxyplotService.DrawPointTable(TablePlotModel, EllipticCurve);
             OxyplotService.DrawEllipticCurve(CurvePlotModel, EllipticCurve);
