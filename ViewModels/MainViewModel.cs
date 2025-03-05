@@ -128,11 +128,10 @@ namespace ECDH.ViewModels
             _curvePlotModel = OxyplotService.CreatePlotModel();
             _tablePlotModel = OxyplotService.CreatePlotModel(19);
 
-            _parameterA = "-7"; _parameterB = "10"; _primeNumber = "19";
             _ellipticCurve = EllipticCurve.Instance;
-            _ellipticCurve.a = -7;
-            _ellipticCurve.b = 10;
-            _ellipticCurve.p = 19;
+            _ellipticCurve.a = -7; _parameterA = "-7";
+            _ellipticCurve.b = 10; _parameterB = "10";
+            _ellipticCurve.p = 19; _primeNumber = "19";
 
             OxyplotService.DrawPointTable(TablePlotModel, EllipticCurve);
             OxyplotService.DrawEllipticCurve(CurvePlotModel, EllipticCurve);

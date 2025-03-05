@@ -15,7 +15,7 @@ namespace ECDH.Models
             }
         }
 
-        private EllipticCurve() {}
+        private EllipticCurve() {  }
 
         public BigInteger a { get; set; }
         public BigInteger b { get; set; }

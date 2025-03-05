@@ -7,11 +7,7 @@ namespace ECDH.Models
         public BigInteger x { get; set; }
         public BigInteger y { get; set; }
 
-        public Point()
-        {
-            x = 0;
-            y = 0;
-        }
+        public Point() {  }
 
         public Point(BigInteger x, BigInteger y)
         {
@@ -19,34 +15,87 @@ namespace ECDH.Models
             this.y = y;
         }
 
-        public static Point operator +(Point left, Point right)
+        public static Point? operator +(Point? left, Point? right)
         {
-            BigInteger lambda;
-            Point result = new();
-
-            if (left.x == right.x)
-            {
-                if (left.y == right.y)
-                {
-                    lambda = (3 * BigInteger.Pow(left.x, 2) + EllipticCurve.Instance.a) / (2 * left.y);
-                    result.x = BigInteger.Pow(lambda, 2) - 2 * left.x;
-                    result.y = lambda * (left.x - result.x) - left.y;
-                }
-            }
+            if (left == null)
+                return right;
+            else if (right == null)
+                return left;
             else
             {
-                lambda = (right.y - left.y) / (right.x - left.x);
-                result.x = BigInteger.Pow(lambda, 2) - left.x - right.x;
-                result.y = lambda * (left.x = result.x) - left.y;
-            }
+                BigInteger lambda;
+                BigInteger p = EllipticCurve.Instance.p;
 
-            return result;
+                Point result = new();
+
+                if (left.x == right.x)
+                {
+                    if (left.y == right.y)
+                    {
+                        BigInteger divisible = (3 * BigInteger.ModPow(left.x, 2, p) + EllipticCurve.Instance.a) % p;
+                        BigInteger divider = 2 * left.y % p;
+
+                        if (divider == 0)
+                            return null;
+
+                        while (divisible % divider != 0)
+                            divisible += p;
+
+                        lambda = divisible / divider % p;
+
+                        BigInteger x = (BigInteger.ModPow(lambda, 2, p) - 2 * left.x) % p;
+                        BigInteger y = (lambda * (left.x - x) - left.y) % p;
+
+                        result.x = x < 0 ? x + p : x;
+                        result.y = y < 0 ? y + p : y;
+                    }
+                    else
+                        return null;
+                }
+                else
+                {
+                    BigInteger divisible = (right.y - left.y) % p;
+                    BigInteger divider = (right.x - left.x) % p;
+
+                    if (divider == 0)
+                        return null;
+
+                    while (divisible % divider != 0)
+                        divisible += p;
+
+                    lambda = divisible / divider % p;
+
+                    BigInteger x = (BigInteger.ModPow(lambda, 2, p) - left.x - right.x) % p;
+                    BigInteger y = (lambda * (left.x - x) - left.y) % p;
+
+                    result.x = x < 0 ? x + p : x;
+                    result.y = y < 0 ? y + p : y;
+                }
+
+                return result;
+            }
         }
 
-        public static BigInteger operator *(BigInteger left, Point right)
+        public static Point? operator *(BigInteger left, Point? right)
         {
-            // TODO: реализовать алгоритм быстрого умножения числа и точки
-            return 0;
+            if (right == null)
+                return null;
+            else
+            {
+                Point? result = null;
+                Point? addend = new(right.x, right.y);
+
+                while (left > 0)
+                {
+                    if ((left & 1) == 1)
+                        result += addend;
+
+                    addend += addend;
+                    left >>= 1;
+                }
+
+                return result;
+            }
         }
 
         public override string? ToString()
