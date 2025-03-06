@@ -162,9 +162,9 @@
                 Style="{StaticResource StatusBorder}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Style="{StaticResource TitleTextBlock}" Margin="12, 8, 0, 8"
-                           Text="p = " HorizontalAlignment="Left" />
+                           Text="Result: " HorizontalAlignment="Left" />
                 <TextBlock Style="{StaticResource TitleTextBlock}" Margin="2, 8, 0, 8"
-                           Text="{Binding PrimeNumber}" HorizontalAlignment="Left" />
+                           Text="{Binding ActionResult}" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>
 

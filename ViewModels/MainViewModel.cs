@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ECDH.Models;
 using ECDH.Commands;
 using ECDH.Services;
+using System.Numerics;
 
 namespace ECDH.ViewModels
 {
@@ -30,11 +31,11 @@ namespace ECDH.ViewModels
             set => SetProperty(ref _primeNumber, value);
         }
 
-        private EllipticCurve _ellipticCurve;
-        public EllipticCurve EllipticCurve
+        private string? _actionResult;
+        public string? ActionResult
         {
-            get => _ellipticCurve;
-            set => SetProperty(ref _ellipticCurve, value);
+            get => _actionResult;
+            set => SetProperty(ref _actionResult, value);
         }
 
         private PlotModel _curvePlotModel;
@@ -82,11 +83,10 @@ namespace ECDH.ViewModels
             if (!int.TryParse(ParameterB, out var b))
                 return;
 
-            EllipticCurve.a = a;
-            EllipticCurve.b = b;
+            EllipticCurve.a = a; EllipticCurve.b = b;
 
             var curvePlotModel = OxyplotService.CreatePlotModel();
-            OxyplotService.DrawEllipticCurve(curvePlotModel, EllipticCurve);
+            OxyplotService.DrawEllipticCurve(curvePlotModel);
 
             CurvePlotModel = curvePlotModel;
         }
@@ -105,7 +105,7 @@ namespace ECDH.ViewModels
 
             EllipticCurve.p = p;
             var tablePlotModel = OxyplotService.CreatePlotModel(p);
-            OxyplotService.DrawPointTable(tablePlotModel, EllipticCurve);
+            OxyplotService.DrawPointTable(tablePlotModel);
 
             TablePlotModel = tablePlotModel;
         }
@@ -113,8 +113,8 @@ namespace ECDH.ViewModels
         public ICommand ActionCommand { get; }
         private void OnActionCommandExecuted(object? parameter)
         {
-            var primeGenerator = new MillerRabinPrimeGenerator();
-            PrimeNumber = primeGenerator.GeneratePrimeNumber().ToString();
+            var point = new Point(0, 10);
+            ActionResult = $"{5} * {point} = {5 * point}";
         }
 
         public MainViewModel()
@@ -126,15 +126,14 @@ namespace ECDH.ViewModels
             CreateEllipticCurveCommand = new RelayCommand(OnCreateEllipticCurveCommandExecuted);
 
             _curvePlotModel = OxyplotService.CreatePlotModel();
-            _tablePlotModel = OxyplotService.CreatePlotModel(19);
+            _tablePlotModel = OxyplotService.CreatePlotModel(97);
 
-            _ellipticCurve = EllipticCurve.Instance;
-            _ellipticCurve.a = -7; _parameterA = "-7";
-            _ellipticCurve.b = 10; _parameterB = "10";
-            _ellipticCurve.p = 19; _primeNumber = "19";
+            EllipticCurve.a = 2; _parameterA = "2";
+            EllipticCurve.b = 3; _parameterB = "3";
+            EllipticCurve.p = 97; _primeNumber = "97";
 
-            OxyplotService.DrawPointTable(TablePlotModel, EllipticCurve);
-            OxyplotService.DrawEllipticCurve(CurvePlotModel, EllipticCurve);
+            OxyplotService.DrawPointTable(TablePlotModel);
+            OxyplotService.DrawEllipticCurve(CurvePlotModel);
         }
     }
 }

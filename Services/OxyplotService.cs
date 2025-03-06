@@ -50,15 +50,15 @@ namespace ECDH.Services
             return curvePlotModel;
         }
 
-        public static void DrawEllipticCurve(PlotModel curvePlotModel, EllipticCurve ellipticCurve)
+        public static void DrawEllipticCurve(PlotModel curvePlotModel)
         {
             curvePlotModel.Series.Clear();
 
             double temp, size = 10;
-            int a = (int)ellipticCurve.a, b = (int)ellipticCurve.b;
+            int a = (int)EllipticCurve.a, b = (int)EllipticCurve.b;
             var lineSeries = new LineSeries { Color = OxyColors.Orange, StrokeThickness = 2 };
 
-            if (ellipticCurve.Discriminant >= 0)
+            if (EllipticCurve.Discriminant >= 0)
             {
                 for (double i = size; i > -size; i -= 0.01)
                 {
@@ -128,7 +128,7 @@ namespace ECDH.Services
             }
         }
 
-        public static void DrawPointTable(PlotModel tablePlotModel, EllipticCurve ellipticCurve)
+        public static void DrawPointTable(PlotModel tablePlotModel)
         {
             tablePlotModel.Series.Clear();
 
@@ -140,7 +140,7 @@ namespace ECDH.Services
                 MarkerSize = 3
             };
 
-            int a = (int)ellipticCurve.a, b = (int)ellipticCurve.b, p = (int)ellipticCurve.p;
+            int a = (int)EllipticCurve.a, b = (int)EllipticCurve.b, p = (int)EllipticCurve.p;
             var leftSide = new List<int>(); var rightSide = new List<int>();
             for (int i = 0; i < p; i++)
             {

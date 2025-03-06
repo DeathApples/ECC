@@ -7,95 +7,100 @@ namespace ECDH.Models
         public BigInteger x { get; set; }
         public BigInteger y { get; set; }
 
+        public static Point Infinity => new();
+
         public Point() {  }
+        public Point(Point point) { x = point.x; y = point.y; }
+        public Point(BigInteger x, BigInteger y) { this.x = x; this.y = y; }
 
-        public Point(BigInteger x, BigInteger y)
+        public static Point operator +(Point left, Point right)
         {
-            this.x = x;
-            this.y = y;
-        }
-
-        public static Point? operator +(Point? left, Point? right)
-        {
-            if (left == null)
+            if (left == Infinity)
                 return right;
-            else if (right == null)
+
+            if (right == Infinity)
                 return left;
+
+            if (left == -right)
+                return Infinity;
+
+            BigInteger x, y, lambda;
+
+            if (left == right)
+                lambda = (3 * BigInteger.Pow(left.x, 2) + EllipticCurve.a) * ModularInverse(2 * left.y, EllipticCurve.p) % EllipticCurve.p;
             else
-            {
-                BigInteger lambda;
-                BigInteger p = EllipticCurve.Instance.p;
+                lambda = (right.y - left.y) * ModularInverse(right.x - left.x, EllipticCurve.p) % EllipticCurve.p;
 
-                Point result = new();
+            x = (BigInteger.Pow(lambda, 2) - left.x - right.x) % EllipticCurve.p;
+            y = (lambda * (left.x - x) - left.y) % EllipticCurve.p;
 
-                if (left.x == right.x)
-                {
-                    if (left.y == right.y)
-                    {
-                        BigInteger divisible = (3 * BigInteger.ModPow(left.x, 2, p) + EllipticCurve.Instance.a) % p;
-                        BigInteger divider = 2 * left.y % p;
+            x = x < 0 ? x + EllipticCurve.p : x;
+            y = y < 0 ? y + EllipticCurve.p : y;
 
-                        if (divider == 0)
-                            return null;
-
-                        while (divisible % divider != 0)
-                            divisible += p;
-
-                        lambda = divisible / divider % p;
-
-                        BigInteger x = (BigInteger.ModPow(lambda, 2, p) - 2 * left.x) % p;
-                        BigInteger y = (lambda * (left.x - x) - left.y) % p;
-
-                        result.x = x < 0 ? x + p : x;
-                        result.y = y < 0 ? y + p : y;
-                    }
-                    else
-                        return null;
-                }
-                else
-                {
-                    BigInteger divisible = (right.y - left.y) % p;
-                    BigInteger divider = (right.x - left.x) % p;
-
-                    if (divider == 0)
-                        return null;
-
-                    while (divisible % divider != 0)
-                        divisible += p;
-
-                    lambda = divisible / divider % p;
-
-                    BigInteger x = (BigInteger.ModPow(lambda, 2, p) - left.x - right.x) % p;
-                    BigInteger y = (lambda * (left.x - x) - left.y) % p;
-
-                    result.x = x < 0 ? x + p : x;
-                    result.y = y < 0 ? y + p : y;
-                }
-
-                return result;
-            }
+            return new(x, y);
         }
 
-        public static Point? operator *(BigInteger left, Point? right)
+        public static Point operator *(BigInteger left, Point right)
         {
-            if (right == null)
-                return null;
-            else
+            
+            Point result = Infinity;
+            Point addend = new(right);
+
+            while (left > 0)
             {
-                Point? result = null;
-                Point? addend = new(right.x, right.y);
+                if ((left & 1) == 1)
+                    result += addend;
 
-                while (left > 0)
-                {
-                    if ((left & 1) == 1)
-                        result += addend;
-
-                    addend += addend;
-                    left >>= 1;
-                }
-
-                return result;
+                addend += addend;
+                left >>= 1;
             }
+
+            return result;
+        }
+
+        public static Point operator -(Point point)
+        {
+            return new Point(point.x, -point.y);
+        }
+
+        public static bool operator ==(Point left, Point right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Point left, Point right)
+        {
+            return !left.Equals(right);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+
+            if (obj is Point point)
+                return x == point.x && y == point.y;
+            else
+                throw new ArgumentException("Argument “obj” must be type of Class “Point”", nameof(obj));
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(x, y);
+        }
+
+        private static BigInteger ModularInverse(BigInteger number, BigInteger module)
+        {
+            BigInteger coefficient = 0, prevCoefficient = 1;
+            BigInteger remainder = module, prevRemainder = number;
+
+            while (remainder != 0)
+            {
+                BigInteger quotient = prevRemainder / remainder;
+                (prevRemainder, remainder) = (remainder, prevRemainder - quotient * remainder);
+                (prevCoefficient, coefficient) = (coefficient, prevCoefficient - quotient * coefficient);
+            }
+
+            return prevRemainder == 1 ? (prevCoefficient + module) % module : -1;
         }
 
         public override string? ToString()
