@@ -2,36 +2,23 @@
 
 namespace ECDH.Models
 {
-    public sealed class EllipticCurve
+    public static class EllipticCurve
     {
-        private static EllipticCurve? _instance;
+        public static BigInteger A { get; set; }
+        public static BigInteger B { get; set; }
+        public static BigInteger P { get; set; }
 
-        public static EllipticCurve Instance
-        {
-            get
-            {
-                _instance ??= new();
-                return _instance;
-            }
-        }
+        public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
 
-        private EllipticCurve() {  }
-
-        public static BigInteger a { get; set; }
-        public static BigInteger b { get; set; }
-        public static BigInteger p { get; set; }
-
-        public static BigInteger Discriminant => 4 * BigInteger.Pow(a, 3) + 27 * BigInteger.Pow(b, 2);
-
-        public override string? ToString()
+        public static new string? ToString()
         {
             string formula = "y² = x³";
 
-            if (a != 0)
-                formula += a == 1 ? " + x" : a == -1 ? " - x" : a < 0 ? $" - {BigInteger.Abs(a)}x" : $" + {a}x";
+            if (A != 0)
+                formula += A == 1 ? " + x" : A == -1 ? " - x" : A < 0 ? $" - {BigInteger.Abs(A)}x" : $" + {A}x";
 
-            if (b != 0)
-                formula += b < 0 ? $" - {BigInteger.Abs(b)}" : $" + {b}";
+            if (B != 0)
+                formula += B < 0 ? $" - {BigInteger.Abs(B)}" : $" + {B}";
 
             return formula;
         }

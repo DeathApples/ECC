@@ -4,7 +4,6 @@ using System.Windows.Input;
 using ECDH.Models;
 using ECDH.Commands;
 using ECDH.Services;
-using System.Numerics;
 
 namespace ECDH.ViewModels
 {
@@ -29,6 +28,13 @@ namespace ECDH.ViewModels
         {
             get => _primeNumber;
             set => SetProperty(ref _primeNumber, value);
+        }
+
+        private string? _formulaEllipticCurve;
+        public string? FormulaEllipticCurve
+        {
+            get => _formulaEllipticCurve;
+            set => SetProperty(ref _formulaEllipticCurve, value);
         }
 
         private string? _actionResult;
@@ -83,12 +89,13 @@ namespace ECDH.ViewModels
             if (!int.TryParse(ParameterB, out var b))
                 return;
 
-            EllipticCurve.a = a; EllipticCurve.b = b;
+            EllipticCurve.A = a; EllipticCurve.B = b;
 
             var curvePlotModel = OxyplotService.CreatePlotModel();
             OxyplotService.DrawEllipticCurve(curvePlotModel);
 
             CurvePlotModel = curvePlotModel;
+            FormulaEllipticCurve = EllipticCurve.ToString();
         }
 
         public ICommand CreatePointTableCommand { get; }
@@ -103,8 +110,8 @@ namespace ECDH.ViewModels
             if (!primeGenerator.IsPrimeNumber(p))
                 return;
 
-            EllipticCurve.p = p;
-            var tablePlotModel = OxyplotService.CreatePlotModel(p);
+            EllipticCurve.P = p;
+            var tablePlotModel = OxyplotService.CreatePlotModel(true);
             OxyplotService.DrawPointTable(tablePlotModel);
 
             TablePlotModel = tablePlotModel;
@@ -126,11 +133,12 @@ namespace ECDH.ViewModels
             CreateEllipticCurveCommand = new RelayCommand(OnCreateEllipticCurveCommandExecuted);
 
             _curvePlotModel = OxyplotService.CreatePlotModel();
-            _tablePlotModel = OxyplotService.CreatePlotModel(97);
+            _tablePlotModel = OxyplotService.CreatePlotModel(true);
 
-            EllipticCurve.a = 2; _parameterA = "2";
-            EllipticCurve.b = 3; _parameterB = "3";
-            EllipticCurve.p = 97; _primeNumber = "97";
+            EllipticCurve.A = 2; _parameterA = "2";
+            EllipticCurve.B = 3; _parameterB = "3";
+            EllipticCurve.P = 97; _primeNumber = "97";
+            FormulaEllipticCurve = EllipticCurve.ToString();
 
             OxyplotService.DrawPointTable(TablePlotModel);
             OxyplotService.DrawEllipticCurve(CurvePlotModel);

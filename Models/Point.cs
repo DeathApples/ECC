@@ -27,15 +27,15 @@ namespace ECDH.Models
             BigInteger x, y, lambda;
 
             if (left == right)
-                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.a) * ModularInverse(2 * left.Y, EllipticCurve.p) % EllipticCurve.p;
+                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ModularInverse(2 * left.Y, EllipticCurve.P) % EllipticCurve.P;
             else
-                lambda = (right.Y - left.Y) * ModularInverse(right.X - left.X, EllipticCurve.p) % EllipticCurve.p;
+                lambda = (right.Y - left.Y) * ModularInverse(right.X - left.X, EllipticCurve.P) % EllipticCurve.P;
 
-            x = (BigInteger.Pow(lambda, 2) - left.X - right.X) % EllipticCurve.p;
-            y = (lambda * (left.X - x) - left.Y) % EllipticCurve.p;
+            x = (BigInteger.Pow(lambda, 2) - left.X - right.X) % EllipticCurve.P;
+            y = (lambda * (left.X - x) - left.Y) % EllipticCurve.P;
 
-            x = x < 0 ? x + EllipticCurve.p : x;
-            y = y < 0 ? y + EllipticCurve.p : y;
+            x = x < 0 ? x + EllipticCurve.P : x;
+            y = y < 0 ? y + EllipticCurve.P : y;
 
             return new(x, y);
         }

@@ -8,20 +8,20 @@ namespace ECDH.Services
 {
     public static class OxyplotService
     {
-        public static PlotModel CreatePlotModel(int p = 0)
+        public static PlotModel CreatePlotModel(bool isPointTable = false)
         {
             var curvePlotModel = new PlotModel { PlotAreaBorderThickness = new OxyThickness(0) };
             curvePlotModel.Axes.Clear();
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = p == 0 ? 7 : p,
-                Minimum = p == 0 ? -7 : 0,
+                Maximum = isPointTable ? (int)EllipticCurve.P : 7,
+                Minimum = isPointTable ? 0 : -7,
                 Position = AxisPosition.Left,
-                PositionAtZeroCrossing = p == 0,
+                PositionAtZeroCrossing = !isPointTable,
                 AxislineStyle = LineStyle.Solid,
-                MinorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
-                MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
+                MinorGridlineStyle = isPointTable ? LineStyle.Solid : LineStyle.None,
+                MajorGridlineStyle = isPointTable ? LineStyle.Solid : LineStyle.None,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
@@ -32,13 +32,13 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = p == 0 ? 7 : p,
-                Minimum = p == 0 ? -7 : 0,
+                Maximum = isPointTable ? (int)EllipticCurve.P : 7,
+                Minimum = isPointTable ? 0 : -7,
                 Position = AxisPosition.Bottom,
-                PositionAtZeroCrossing = p == 0,
+                PositionAtZeroCrossing = !isPointTable,
                 AxislineStyle = LineStyle.Solid,
-                MinorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
-                MajorGridlineStyle = p == 0 ? LineStyle.None : LineStyle.Solid,
+                MinorGridlineStyle = isPointTable ? LineStyle.Solid : LineStyle.None,
+                MajorGridlineStyle = isPointTable ? LineStyle.Solid : LineStyle.None,
                 TickStyle = TickStyle.Crossing,
                 TextColor = OxyColor.FromRgb(240, 240, 240),
                 AxislineColor = OxyColor.FromRgb(140, 140, 140),
@@ -55,7 +55,7 @@ namespace ECDH.Services
             curvePlotModel.Series.Clear();
 
             double temp, size = 10;
-            int a = (int)EllipticCurve.a, b = (int)EllipticCurve.b;
+            int a = (int)EllipticCurve.A, b = (int)EllipticCurve.B;
             var lineSeries = new LineSeries { Color = OxyColors.Orange, StrokeThickness = 2 };
 
             if (EllipticCurve.Discriminant >= 0)
@@ -140,7 +140,7 @@ namespace ECDH.Services
                 MarkerSize = 3
             };
 
-            int a = (int)EllipticCurve.a, b = (int)EllipticCurve.b, p = (int)EllipticCurve.p;
+            int a = (int)EllipticCurve.A, b = (int)EllipticCurve.B, p = (int)EllipticCurve.P;
             var leftSide = new List<int>(); var rightSide = new List<int>();
             for (int i = 0; i < p; i++)
             {
