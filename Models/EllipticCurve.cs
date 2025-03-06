@@ -23,8 +23,6 @@ namespace ECDH.Models
 
         public static BigInteger Discriminant => 4 * BigInteger.Pow(a, 3) + 27 * BigInteger.Pow(b, 2);
 
-        public static (BigInteger, BigInteger) O => (0, 0);
-
         public override string? ToString()
         {
             string formula = "y² = x³";
