@@ -20,7 +20,7 @@ namespace ECDH.Services
                 l = primalityTest.NextPrimeNumber(l);
             }
 
-            // Восстановить t используя наборы Ap и Ep
+            // Восстановить t используя наборы Ap и Ep по Китайской теореме об остатках
             return EllipticCurve.P + 1 - t;
         }
     }
