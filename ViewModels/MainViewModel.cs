@@ -68,16 +68,16 @@ namespace ECDH.ViewModels
         public ICommand GenerateParametrsCommand { get; }
         private void OnGenerateParametrsCommandExecuted(object? parameter)
         {
-            var rnd = new Random();
-            ParameterA = $"{rnd.Next(32) - 16}";
-            ParameterB = $"{rnd.Next(32) - 16}";
+            EllipticCurve.GenerateParameters();
+            ParameterA = EllipticCurve.A.ToString();
+            ParameterB = EllipticCurve.B.ToString();
         }
 
         public ICommand GeneratePrimeCommand { get; }
         private void OnGeneratePrimeCommandExecuted(object? parameter)
         {
-            var primalityTest = new MillerRabinPrimalityTest();
-            PrimeNumber = primalityTest.GeneratePrimeNumber(false).ToString();
+            EllipticCurve.GeneratePrimeNumber();
+            PrimeNumber = EllipticCurve.P.ToString();
         }
 
         public ICommand CreateEllipticCurveCommand { get; }
