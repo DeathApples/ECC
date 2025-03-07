@@ -68,7 +68,7 @@ namespace ECDH.ViewModels
         public ICommand GenerateParametrsCommand { get; }
         private void OnGenerateParametrsCommandExecuted(object? parameter)
         {
-            EllipticCurve.GenerateParameters();
+            EllipticCurve.GenerateParameters(false);
             ParameterA = EllipticCurve.A.ToString();
             ParameterB = EllipticCurve.B.ToString();
         }
@@ -76,7 +76,7 @@ namespace ECDH.ViewModels
         public ICommand GeneratePrimeCommand { get; }
         private void OnGeneratePrimeCommandExecuted(object? parameter)
         {
-            EllipticCurve.GeneratePrimeNumber();
+            EllipticCurve.GeneratePrimeNumber(false);
             PrimeNumber = EllipticCurve.P.ToString();
         }
 
