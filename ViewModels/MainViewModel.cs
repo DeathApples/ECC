@@ -76,8 +76,8 @@ namespace ECDH.ViewModels
         public ICommand GeneratePrimeCommand { get; }
         private void OnGeneratePrimeCommandExecuted(object? parameter)
         {
-            var primeGenerator = new MillerRabinPrimeGenerator();
-            PrimeNumber = primeGenerator.GeneratePrimeNumber(false).ToString();
+            var primalityTest = new MillerRabinPrimalityTest();
+            PrimeNumber = primalityTest.GeneratePrimeNumber(false).ToString();
         }
 
         public ICommand CreateEllipticCurveCommand { get; }
@@ -106,8 +106,8 @@ namespace ECDH.ViewModels
             if (!int.TryParse(PrimeNumber, out var p))
                 return;
 
-            var primeGenerator = new MillerRabinPrimeGenerator();
-            if (!primeGenerator.IsPrimeNumber(p))
+            var primalityTest = new MillerRabinPrimalityTest();
+            if (!primalityTest.IsPrimeNumber(p))
                 return;
 
             EllipticCurve.P = p;

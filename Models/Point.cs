@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using ECDH.Services;
+using System.Numerics;
 
 namespace ECDH.Models
 {
@@ -27,9 +28,9 @@ namespace ECDH.Models
             BigInteger x, y, lambda;
 
             if (left == right)
-                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ModularInverse(2 * left.Y, EllipticCurve.P) % EllipticCurve.P;
+                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ExtendedEuclideanAlgorithm.ModularInverse(2 * left.Y, EllipticCurve.P) % EllipticCurve.P;
             else
-                lambda = (right.Y - left.Y) * ModularInverse(right.X - left.X, EllipticCurve.P) % EllipticCurve.P;
+                lambda = (right.Y - left.Y) * ExtendedEuclideanAlgorithm.ModularInverse(right.X - left.X, EllipticCurve.P) % EllipticCurve.P;
 
             x = (BigInteger.Pow(lambda, 2) - left.X - right.X) % EllipticCurve.P;
             y = (lambda * (left.X - x) - left.Y) % EllipticCurve.P;
@@ -85,21 +86,6 @@ namespace ECDH.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(X, Y);
-        }
-
-        private static BigInteger ModularInverse(BigInteger number, BigInteger module)
-        {
-            BigInteger coefficient = 0, prevCoefficient = 1;
-            BigInteger remainder = module, prevRemainder = number;
-
-            while (remainder != 0)
-            {
-                BigInteger quotient = prevRemainder / remainder;
-                (prevRemainder, remainder) = (remainder, prevRemainder - quotient * remainder);
-                (prevCoefficient, coefficient) = (coefficient, prevCoefficient - quotient * coefficient);
-            }
-
-            return prevRemainder == 1 ? (prevCoefficient + module) % module : -1;
         }
 
         public override string? ToString()

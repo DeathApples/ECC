@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace ECDH.Services
 {
-    public class MillerRabinPrimeGenerator()
+    public class MillerRabinPrimalityTest()
     {
         public int PrecisionFactor { get; private set; } = 100;
 
@@ -15,6 +15,16 @@ namespace ECDH.Services
             do
             {
                 number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(32), true) : rnd.Next(11, 500);
+            } while (!IsPrimeNumber(number));
+
+            return number;
+        }
+
+        public BigInteger NextPrimeNumber(BigInteger number)
+        {
+            do
+            {
+                number += 2;
             } while (!IsPrimeNumber(number));
 
             return number;
