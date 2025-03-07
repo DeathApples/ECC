@@ -14,13 +14,13 @@ namespace ECDH.Services
 
             while (M < 4 /* * BigInteger.Sqrt(EllipticCurve.P) */)
             {
-                // 
+                // Выполнить проверку, является ли число l простым Элкиса или Аткина
 
                 M *= l;
                 l = primalityTest.NextPrimeNumber(l);
             }
 
-            // восстановить t используя наборы Ap и Ep
+            // Восстановить t используя наборы Ap и Ep
             return EllipticCurve.P + 1 - t;
         }
     }
