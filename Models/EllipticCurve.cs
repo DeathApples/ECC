@@ -21,7 +21,7 @@ namespace ECDH.Models
             {
                 A = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32 - 16);
                 B = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32 - 16);
-            } while (Discriminant != 0);
+            } while (Discriminant == 0);
         }
 
         public static void GeneratePrimeNumber(bool isLarge = true)
