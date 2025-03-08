@@ -11,7 +11,7 @@ namespace ECDH.Models
         public static BigInteger P { get; set; }
 
         public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
-        public static BigInteger JInvariant => 1728 * 4 * BigInteger.Pow(A, 3) / (4 * BigInteger.Pow(A, 3) - 27 * BigInteger.Pow(B, 2));
+        public static BigInteger JInvariant => 1728 * 4 * BigInteger.Pow(A, 3) / Discriminant;
 
         public static void GenerateParameters(bool isLarge = true)
         {
