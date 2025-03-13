@@ -42,11 +42,8 @@ namespace ECDH.Models
             else
                 lambda = (right.Y - left.Y) * ExtendedEuclideanAlgorithm.ModularInverse(EllipticCurve.GetPositiveValue(right.X - left.X), EllipticCurve.P) % EllipticCurve.P;
 
-            x = (BigInteger.Pow(lambda, 2) - left.X - right.X) % EllipticCurve.P;
-            y = (lambda * (left.X - x) - left.Y) % EllipticCurve.P;
-
-            x = x < 0 ? x + EllipticCurve.P : x;
-            y = y < 0 ? y + EllipticCurve.P : y;
+            x = EllipticCurve.GetPositiveValue(BigInteger.Pow(lambda, 2) - left.X - right.X);
+            y = EllipticCurve.GetPositiveValue(lambda * (left.X - x) - left.Y);
 
             return new(x, y);
         }
