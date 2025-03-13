@@ -3,11 +3,11 @@ using System.Security.Cryptography;
 
 namespace ECDH.Services
 {
-    public class MillerRabinPrimalityTest()
+    public static class MillerRabinPrimalityTest
     {
-        public int PrecisionFactor { get; private set; } = 100;
+        public static int PrecisionFactor { get; private set; } = 100;
 
-        public BigInteger GeneratePrimeNumber(bool isLarge = true)
+        public static BigInteger GeneratePrimeNumber(bool isLarge = true)
         {
             var rnd = new Random();
             BigInteger number;
@@ -20,7 +20,7 @@ namespace ECDH.Services
             return number;
         }
 
-        public BigInteger NextPrimeNumber(BigInteger number)
+        public static BigInteger NextPrimeNumber(BigInteger number)
         {
             do
             {
@@ -30,7 +30,7 @@ namespace ECDH.Services
             return number;
         }
 
-        public bool IsPrimeNumber(BigInteger number)
+        public static bool IsPrimeNumber(BigInteger number)
         {
             if (number == 2 || number == 3)
                 return true;

@@ -4,7 +4,6 @@ using System.Windows.Input;
 using ECDH.Models;
 using ECDH.Commands;
 using ECDH.Services;
-using System.Reflection.Metadata;
 
 namespace ECDH.ViewModels
 {
@@ -265,8 +264,7 @@ namespace ECDH.ViewModels
             if (EllipticCurve.Discriminant == 0)
                 return;
 
-            var primalityTest = new MillerRabinPrimalityTest();
-            if (!primalityTest.IsPrimeNumber(EllipticCurve.P))
+            if (!MillerRabinPrimalityTest.IsPrimeNumber(EllipticCurve.P))
                 return;
 
             var curvePlotModel = OxyplotService.CreatePlotModel();

@@ -28,8 +28,7 @@ namespace ECDH.Models
 
         public static void GeneratePrimeNumber(bool isLarge = true)
         {
-            var primalityTest = new MillerRabinPrimalityTest();
-            P = primalityTest.GeneratePrimeNumber(isLarge);
+            P = MillerRabinPrimalityTest.GeneratePrimeNumber(isLarge);
         }
 
         public static Point GeneratePoint(bool isLarge = true)

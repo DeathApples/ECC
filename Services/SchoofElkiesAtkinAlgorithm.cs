@@ -18,7 +18,7 @@ namespace ECDH.Services
                 // Выполнить проверку, является ли число l простым Элкиса или Аткина
 
                 M *= l;
-                l = primalityTest.NextPrimeNumber(l);
+                l = MillerRabinPrimalityTest.NextPrimeNumber(l);
             }
 
             // Восстановить t используя наборы Ap и Ep по Китайской теореме об остатках
