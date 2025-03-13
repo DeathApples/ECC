@@ -19,8 +19,8 @@ namespace ECDH.Models
 
             do 
             {
-                A = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32 - 16);
-                B = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32 - 16);
+                A = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32) - 16;
+                B = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32) - 16;
             } while (Discriminant == 0);
         }
 

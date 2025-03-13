@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="ECDH.UserControls.NumberBox" mc:Ignorable="d"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ECDH.UserControls" Name="NumberBoxControl">
+
+    <Border BorderThickness="1"
+            BorderBrush="{Binding BorderBrush, ElementName=NumberBoxControl}"
+            Height="{Binding Height, ElementName=NumberBoxControl}"
+            Width="{Binding Width, ElementName=NumberBoxControl}">
+        
+        <Grid>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding Height, ElementName=NumberBoxControl}" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Background="{Binding BorderBrush, ElementName=NumberBoxControl}">
+
+                <TextBlock Foreground="{Binding Foreground, ElementName=NumberBoxControl}"
+                           FontSize="{Binding FontSize, ElementName=NumberBoxControl}"
+                           Text="{Binding ParameterName, ElementName=NumberBoxControl}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" />
+                
+            </Border>
+            
+            <TextBox Grid.Column="1"
+                     Text="{Binding Parameter, ElementName=NumberBoxControl, UpdateSourceTrigger=PropertyChanged}"
+                     Background="{Binding Background, ElementName=NumberBoxControl}"
+                     Foreground="{Binding Foreground, ElementName=NumberBoxControl}"
+                     FontSize="{Binding FontSize, ElementName=NumberBoxControl}"
+                     IsEnabled="{Binding IsEnabled, ElementName=NumberBoxControl}"
+                     VerticalContentAlignment="Center"
+                     BorderThickness="0"
+                     Padding="5, 0" />
+            
+        </Grid>
+        
+    </Border>
+    
+</UserControl>

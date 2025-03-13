@@ -1,147 +1,43 @@
-﻿using OxyPlot;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 
+using ECDH.Views;
 using ECDH.Models;
-using ECDH.Commands;
-using ECDH.Services;
+using ECDH.Converters;
 
 namespace ECDH.ViewModels
 {
     internal class MainViewModel : BaseViewModel
     {
-        private string? _parameterA;
-        public string? ParameterA
+        private readonly Page[] _pages = [
+            new VisualPage(),
+            new DiffieHellmanPage()
+        ];
+
+        private PageEnum? _currentPageEnum;
+        public PageEnum? CurrentPageEnum
         {
-            get => _parameterA;
-            set => SetProperty(ref _parameterA, value);
+            get => _currentPageEnum;
+            set => SetProperty(ref _currentPageEnum, value);
         }
 
-        private string? _parameterB;
-        public string? ParameterB
+        private Page? _currentPage;
+        public Page? CurrentPage
         {
-            get => _parameterB;
-            set => SetProperty(ref _parameterB, value);
+            get => _currentPage;
+            set => SetProperty(ref _currentPage, value);
         }
 
-        private string? _primeNumber;
-        public string? PrimeNumber
+        private void OnChangePageHandler(PageEnum targetPage)
         {
-            get => _primeNumber;
-            set => SetProperty(ref _primeNumber, value);
-        }
-
-        private string? _formulaEllipticCurve;
-        public string? FormulaEllipticCurve
-        {
-            get => _formulaEllipticCurve;
-            set => SetProperty(ref _formulaEllipticCurve, value);
-        }
-
-        private string? _actionResult;
-        public string? ActionResult
-        {
-            get => _actionResult;
-            set => SetProperty(ref _actionResult, value);
-        }
-
-        private PlotModel _curvePlotModel;
-        public PlotModel CurvePlotModel
-        {
-            get => _curvePlotModel;
-            set => SetProperty(ref _curvePlotModel, value);
-        }
-
-        private PlotModel _tablePlotModel;
-        public PlotModel TablePlotModel
-        {
-            get => _tablePlotModel;
-            set => SetProperty(ref _tablePlotModel, value);
-        }
-
-        private bool _isVisualization;
-        public bool IsVisualization
-        {
-            get => _isVisualization;
-            set => SetProperty(ref _isVisualization, value);
-        }
-
-        public ICommand GenerateParametrsCommand { get; }
-        private void OnGenerateParametrsCommandExecuted(object? parameter)
-        {
-            EllipticCurve.GenerateParameters(false);
-            ParameterA = EllipticCurve.A.ToString();
-            ParameterB = EllipticCurve.B.ToString();
-        }
-
-        public ICommand GeneratePrimeCommand { get; }
-        private void OnGeneratePrimeCommandExecuted(object? parameter)
-        {
-            EllipticCurve.GeneratePrimeNumber(false);
-            PrimeNumber = EllipticCurve.P.ToString();
-        }
-
-        public ICommand CreateEllipticCurveCommand { get; }
-        private void OnCreateEllipticCurveCommandExecuted(object? parameter)
-        {
-            if (!int.TryParse(ParameterA, out var a))
-                return;
-
-            if (!int.TryParse(ParameterB, out var b))
-                return;
-
-            EllipticCurve.A = a; EllipticCurve.B = b;
-
-            var curvePlotModel = OxyplotService.CreatePlotModel();
-            OxyplotService.DrawEllipticCurve(curvePlotModel);
-
-            CurvePlotModel = curvePlotModel;
-            FormulaEllipticCurve = EllipticCurve.ToString();
-        }
-
-        public ICommand CreatePointTableCommand { get; }
-        private void OnCreatePointTableCommandExecuted(object? parameter)
-        {
-            OnCreateEllipticCurveCommandExecuted(null);
-
-            if (!int.TryParse(PrimeNumber, out var p))
-                return;
-
-            var primalityTest = new MillerRabinPrimalityTest();
-            if (!primalityTest.IsPrimeNumber(p))
-                return;
-
-            EllipticCurve.P = p;
-            var tablePlotModel = OxyplotService.CreatePlotModel(true);
-            OxyplotService.DrawPointTable(tablePlotModel);
-
-            TablePlotModel = tablePlotModel;
-        }
-
-        public ICommand ActionCommand { get; }
-        private void OnActionCommandExecuted(object? parameter)
-        {
-            var point = new Point(0, 10);
-            ActionResult = $"{5} * {point} = {5 * point}";
+            CurrentPageEnum = targetPage;
+            CurrentPage = _pages[(int)targetPage];
         }
 
         public MainViewModel()
         {
-            ActionCommand = new RelayCommand(OnActionCommandExecuted);
-            GeneratePrimeCommand = new RelayCommand(OnGeneratePrimeCommandExecuted);
-            CreatePointTableCommand = new RelayCommand(OnCreatePointTableCommandExecuted);
-            GenerateParametrsCommand = new RelayCommand(OnGenerateParametrsCommandExecuted);
-            CreateEllipticCurveCommand = new RelayCommand(OnCreateEllipticCurveCommandExecuted);
-
-            _curvePlotModel = OxyplotService.CreatePlotModel();
-            _tablePlotModel = OxyplotService.CreatePlotModel(true);
-
-            EllipticCurve.A = 2; _parameterA = "2";
-            EllipticCurve.B = 3; _parameterB = "3";
-            EllipticCurve.P = 97; _primeNumber = "97";
-            FormulaEllipticCurve = EllipticCurve.ToString();
-
-            OxyplotService.DrawPointTable(TablePlotModel);
-            OxyplotService.DrawEllipticCurve(CurvePlotModel);
+            _currentPageEnum = PageEnum.VisualPage;
+            _currentPage = _pages[(int)PageEnum.VisualPage];
+            PageConverter.ChangePageEvent += OnChangePageHandler;
         }
     }
 }

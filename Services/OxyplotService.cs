@@ -56,7 +56,7 @@ namespace ECDH.Services
 
             double temp, size = 10;
             int a = (int)EllipticCurve.A, b = (int)EllipticCurve.B;
-            var lineSeries = new LineSeries { Color = OxyColors.Orange, StrokeThickness = 2 };
+            var lineSeries = new LineSeries { Color = OxyColor.FromRgb(202, 111, 30), StrokeThickness = 2 };
 
             if (EllipticCurve.Discriminant >= 0)
             {
@@ -107,7 +107,7 @@ namespace ECDH.Services
                 }
 
                 curvePlotModel.Series.Add(lineSeries);
-                lineSeries = new LineSeries { Color = OxyColors.Orange, StrokeThickness = 2 };
+                lineSeries = new LineSeries { Color = OxyColor.FromRgb(202, 111, 30), StrokeThickness = 2 };
 
                 for (double i = -size; i < breakpoint; i += 0.01)
                 {
@@ -135,7 +135,7 @@ namespace ECDH.Services
             var scatterSeries = new ScatterSeries
             {
                 MarkerFill = OxyColors.Transparent, 
-                MarkerStroke = OxyColors.Orange,
+                MarkerStroke = OxyColor.FromRgb(202, 111, 30),
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 3
             };

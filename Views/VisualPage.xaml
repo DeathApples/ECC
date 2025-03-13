@@ -1,0 +1,170 @@
+﻿<Page x:Class="ECDH.Views.VisualPage" mc:Ignorable="d" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:uc="clr-namespace:ECDH.UserControls"
+      xmlns:vm="clr-namespace:ECDH.ViewModels"
+      xmlns:oxy="http://oxyplot.org/wpf"
+      xmlns:local="clr-namespace:ECDH.Views"
+      
+      d:Width="1000" d:Height="901">
+
+    <Page.DataContext>
+        <vm:VisualViewModel />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/VisualStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="428" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource ParametersBorder}">
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="7*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="7*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="4">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" 
+                               Text="Эллиптическая кривая над конечным полем" />
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Margin="0, -15, 0, 20"
+                               Text="{Binding FormulaEllipticCurve}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Height="26" Text="Кривая: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Поле: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Порядок: "/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="15, 0, 0, 0">
+                    <uc:NumberBox Style="{StaticResource FirstParameter}"
+                                  ParameterName="a" Parameter="{Binding ParameterA}" />
+                    <uc:NumberBox Style="{StaticResource SecondParameter}"
+                                  ParameterName="p" Parameter="{Binding PrimeNumber}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left">
+                    <uc:NumberBox Style="{StaticResource FirstParameter}"
+                                  ParameterName="b" Parameter="{Binding ParameterB}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left">
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GenerateParametrsCommand}" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePrimeCommand}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="4">
+                    <Rectangle Margin="40, 0" Height="1" Fill="Gray" />
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Сложение двух точек" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="0">
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Точка P: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Точка Q: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="R = P + Q: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Порядок: "/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="15, 0, 0, 0">
+                    <uc:NumberBox Style="{StaticResource FirstParameter}"
+                                  ParameterName="x" Parameter="{Binding PointPx}" />
+                    <uc:NumberBox Style="{StaticResource SecondParameter}"
+                                  ParameterName="x" Parameter="{Binding PointQx}" />
+                    <uc:NumberBox Style="{StaticResource ThirdParameter}"
+                                  ParameterName="x" Parameter="{Binding PointRx}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left">
+                    <uc:NumberBox Style="{StaticResource FirstParameter}"
+                                  ParameterName="y" Parameter="{Binding PointPy}" />
+                    <uc:NumberBox Style="{StaticResource SecondParameter}"
+                                  ParameterName="y" Parameter="{Binding PointQy}" />
+                    <uc:NumberBox Style="{StaticResource ThirdParameter}"
+                                  ParameterName="y" Parameter="{Binding PointRy}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="3" HorizontalAlignment="Left">
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Grid.ColumnSpan="4">
+                    <Rectangle Margin="40, 0" Height="1" Fill="Gray" />
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Умножение скаляра на точку" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Grid.Column="0">
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Число n: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Точка P: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="R = n * P: "/>
+                    <TextBlock Style="{StaticResource ParametersTextBlock}" Text="Порядок: "/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="15, 0, 0, 0">
+                    <uc:NumberBox Style="{StaticResource FirstParameter}" 
+                                  ParameterName="n" Parameter="{Binding Multiplier}" />
+                    <uc:NumberBox Style="{StaticResource SecondParameter}" 
+                                  ParameterName="x" Parameter="{Binding PointSx}" />
+                    <uc:NumberBox Style="{StaticResource ThirdParameter}" 
+                                  ParameterName="x" Parameter="{Binding PointTx}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Grid.Column="2" HorizontalAlignment="Left">
+                    <uc:NumberBox Style="{StaticResource SecondParameter}" Margin="0, 62, 0, 10" 
+                                  ParameterName="y" Parameter="{Binding PointSy}" />
+                    <uc:NumberBox Style="{StaticResource ThirdParameter}"
+                                  ParameterName="y" Parameter="{Binding PointTy}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Grid.Column="3" HorizontalAlignment="Left">
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GenerateMultiplierCommand}" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CurveBorder}">
+            <oxy:PlotView Grid.Row="1" Style="{StaticResource TablePlotView}"
+                          Model="{Binding TablePlotModel}" />
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource TableBorder}">
+            <oxy:PlotView Grid.Row="1" Style="{StaticResource CurvePlotView}"
+                          Model="{Binding CurvePlotModel}" />
+        </Border>
+
+    </Grid>
+
+</Page>
