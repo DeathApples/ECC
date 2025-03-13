@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using ECDH.Models;
+using System.Numerics;
 
 namespace ECDH.Services
 {
@@ -24,9 +25,7 @@ namespace ECDH.Services
 
             while (d < l)
             {
-                BigInteger candidate = BigInteger.ModPow(d, (l - 1) / 2, l);
-
-                if (candidate == -1 || candidate == l - 1)
+                if (EllipticCurve.GetPositiveValue(BigInteger.ModPow(d, (l - 1) / 2, l)) == l - 1)
                     break;
 
                 d++;

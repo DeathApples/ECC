@@ -6,23 +6,27 @@ namespace ECDH.Models
     public class Point
     {
         public BigInteger X { get; set; }
+        
         public BigInteger Y { get; set; }
 
         public static Point Infinity => new();
+
         public bool IsOnCurve
         {
             get
             {
-                BigInteger left = BigInteger.ModPow(Y, 2, EllipticCurve.P);
-                BigInteger right = (BigInteger.ModPow(X, 3, EllipticCurve.P) + EllipticCurve.A * X + EllipticCurve.B) % EllipticCurve.P;
+                BigInteger left = EllipticCurve.GetPositiveValue(BigInteger.ModPow(Y, 2, EllipticCurve.P));
+                BigInteger right = EllipticCurve.GetPositiveValue(BigInteger.ModPow(X, 3, EllipticCurve.P) + EllipticCurve.A * X + EllipticCurve.B);
 
-                return (left < 0 ? left + EllipticCurve.P : left) == (right < 0 ? right + EllipticCurve.P : right);
+                return left == right;
             }
         }
 
         public Point() {  }
+        
         public Point(Point point) { X = point.X; Y = point.Y; }
-        public Point(BigInteger x, BigInteger y) { X = x; Y = y; }
+        
+        public Point(BigInteger x, BigInteger y) { X = EllipticCurve.GetPositiveValue(x); Y = EllipticCurve.GetPositiveValue(y); }
 
         public static Point operator +(Point left, Point right)
         {

@@ -11,8 +11,9 @@ namespace ECDH.Services
             BigInteger j = EllipticCurve.JInvariant;
 
             var primalityTest = new MillerRabinPrimalityTest();
+            BigInteger sqrt16p = CeilSqrt(16 * EllipticCurve.P);
 
-            while (M < 4 /* * BigInteger.Sqrt(EllipticCurve.P) */)
+            while (M < sqrt16p)
             {
                 // Выполнить проверку, является ли число l простым Элкиса или Аткина
 
@@ -41,6 +42,28 @@ namespace ECDH.Services
 
                 else
                     high = middle - 1;
+            }
+
+            return result;
+        }
+
+        private static BigInteger CeilSqrt(BigInteger n)
+        {
+            BigInteger low = 1, high = n;
+            BigInteger result = n;
+
+            while (high >= low)
+            {
+                BigInteger middle = high - (high - low) / 2;
+
+                if (middle * middle >= n)
+                {
+                    result = middle;
+                    high = middle - 1;
+                }
+
+                else
+                    low = middle + 1;
             }
 
             return result;
