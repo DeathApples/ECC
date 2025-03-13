@@ -9,6 +9,16 @@ namespace ECDH.Models
         public BigInteger Y { get; set; }
 
         public static Point Infinity => new();
+        public bool Exists
+        {
+            get
+            {
+                BigInteger left = BigInteger.ModPow(Y, 2, EllipticCurve.P);
+                BigInteger right = (BigInteger.ModPow(X, 3, EllipticCurve.P) + EllipticCurve.A * X + EllipticCurve.B) % EllipticCurve.P;
+
+                return (left < 0 ? left + EllipticCurve.P : left) == (right < 0 ? right + EllipticCurve.P : right);
+            }
+        }
 
         public Point() {  }
         public Point(Point point) { X = point.X; Y = point.Y; }
@@ -41,18 +51,35 @@ namespace ECDH.Models
             return new(x, y);
         }
 
-        public static Point operator *(BigInteger left, Point right)
+        public static Point operator *(BigInteger number, Point point)
         {
             Point result = Infinity;
-            Point addend = new(right);
+            Point addend = new(point);
 
-            while (left > 0)
+            while (number > 0)
             {
-                if ((left & 1) == 1)
+                if ((number & 1) == 1)
                     result += addend;
 
                 addend += addend;
-                left >>= 1;
+                number >>= 1;
+            }
+
+            return result;
+        }
+
+        public static Point operator *(Point point, BigInteger number)
+        {
+            Point result = Infinity;
+            Point addend = new(point);
+
+            while (number > 0)
+            {
+                if ((number & 1) == 1)
+                    result += addend;
+
+                addend += addend;
+                number >>= 1;
             }
 
             return result;
