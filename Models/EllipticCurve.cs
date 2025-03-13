@@ -13,6 +13,8 @@ namespace ECDH.Models
         public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
         public static BigInteger JInvariant => 1728 * 4 * BigInteger.Pow(A, 3) / Discriminant;
 
+        public static BigInteger GetPositiveValue(BigInteger value) => (value + P) % P;
+
         public static void GenerateParameters(bool isLarge = true)
         {
             var rnd = new Random();
@@ -28,6 +30,20 @@ namespace ECDH.Models
         {
             var primalityTest = new MillerRabinPrimalityTest();
             P = primalityTest.GeneratePrimeNumber(isLarge);
+        }
+
+        public static Point GeneratePoint(bool isLarge = true)
+        {
+            var rnd = new Random();
+            var point = new Point();
+
+            do
+            {
+                point.X = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next((int)P);
+                point.Y = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next((int)P);
+            } while (!point.IsOnCurve);
+
+            return point;
         }
 
         public static new string? ToString()

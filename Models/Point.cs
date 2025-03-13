@@ -9,7 +9,7 @@ namespace ECDH.Models
         public BigInteger Y { get; set; }
 
         public static Point Infinity => new();
-        public bool Exists
+        public bool IsOnCurve
         {
             get
             {
@@ -40,7 +40,7 @@ namespace ECDH.Models
             if (left == right)
                 lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ExtendedEuclideanAlgorithm.ModularInverse(2 * left.Y, EllipticCurve.P) % EllipticCurve.P;
             else
-                lambda = (right.Y - left.Y) * ExtendedEuclideanAlgorithm.ModularInverse(right.X - left.X, EllipticCurve.P) % EllipticCurve.P;
+                lambda = (right.Y - left.Y) * ExtendedEuclideanAlgorithm.ModularInverse(EllipticCurve.GetPositiveValue(right.X - left.X), EllipticCurve.P) % EllipticCurve.P;
 
             x = (BigInteger.Pow(lambda, 2) - left.X - right.X) % EllipticCurve.P;
             y = (lambda * (left.X - x) - left.Y) % EllipticCurve.P;
@@ -87,7 +87,7 @@ namespace ECDH.Models
 
         public static Point operator -(Point point)
         {
-            return new Point(point.X, -point.Y);
+            return new Point(point.X, -point.Y + EllipticCurve.P);
         }
 
         public static bool operator ==(Point left, Point right)

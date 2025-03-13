@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ECDH.Models;
 using ECDH.Commands;
 using ECDH.Services;
+using System.Reflection.Metadata;
 
 namespace ECDH.ViewModels
 {
@@ -248,11 +249,15 @@ namespace ECDH.ViewModels
         public ICommand GeneratePointCommand { get; }
         private void OnGeneratePointCommandExecuted(object? parameter)
         {
+            if (parameter is string pointName)
+                GeneratePoint(pointName);
         }
 
         public ICommand GenerateMultiplierCommand { get; }
         private void OnGenerateMultiplierCommandExecuted(object? parameter)
         {
+            var rnd = new Random();
+            Multiplier = rnd.Next(2, 100).ToString();
         }
 
         private void CreateGraphics()
@@ -274,18 +279,49 @@ namespace ECDH.ViewModels
             FormulaEllipticCurve = EllipticCurve.ToString();
         }
 
+        private void GeneratePoint(string pointName)
+        {
+            var point = EllipticCurve.GeneratePoint(false);
+            switch (pointName)
+            {
+                case "P":
+                    PointPx = point.X.ToString();
+                    PointPy = point.Y.ToString();
+                    break;
+
+                case "Q":
+                    PointQx = point.X.ToString();
+                    PointQy = point.Y.ToString();
+                    break;
+
+                case "S":
+                    PointSx = point.X.ToString();
+                    PointSy = point.Y.ToString();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         private void AddPoint()
         {
-            _pointR = _pointQ + _pointQ;
-            PointRx = _pointR.X.ToString();
-            PointRy = _pointR.Y.ToString();
+            if((_pointP.IsOnCurve || _pointP == Point.Infinity) && (_pointQ.IsOnCurve || _pointQ == Point.Infinity))
+            {
+                _pointR = _pointP + _pointQ;
+                PointRx = _pointR.X.ToString();
+                PointRy = _pointR.Y.ToString();
+            }
         }
 
         private void MultiplyPoint()
         {
-            _pointT = _n * _pointS;
-            PointTx = _pointT.X.ToString();
-            PointTy = _pointT.Y.ToString();
+            if (_pointS.IsOnCurve || _pointS == Point.Infinity)
+            {
+                _pointT = _n * _pointS;
+                PointTx = _pointT.X.ToString();
+                PointTy = _pointT.Y.ToString();
+            }
         }
 
         public VisualViewModel()

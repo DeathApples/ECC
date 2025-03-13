@@ -114,8 +114,10 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="3" HorizontalAlignment="Left">
-                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
-                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}"
+                            CommandParameter="P" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}"
+                            CommandParameter="Q" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Grid.ColumnSpan="4">
@@ -148,7 +150,8 @@
 
                 <StackPanel Grid.Row="5" Grid.Column="3" HorizontalAlignment="Left">
                     <Button Style="{StaticResource RefreshButton}" Command="{Binding GenerateMultiplierCommand}" />
-                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}" />
+                    <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePointCommand}"
+                            CommandParameter="S" />
                 </StackPanel>
 
             </Grid>
