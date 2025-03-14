@@ -4,7 +4,7 @@ namespace ECDH.Services
 {
     public static class ExtendedEuclideanAlgorithm
     {
-        public static (BigInteger, BigInteger, BigInteger) Compute(BigInteger n, BigInteger m)
+        public static (BigInteger gcd, BigInteger s, BigInteger t) Compute(BigInteger n, BigInteger m)
         {
             BigInteger s = 0, s0 = 1;
             BigInteger t = 1, t0 = 0;
