@@ -91,6 +91,11 @@ namespace ECDH.Models
             return new Point(point.X, -point.Y + EllipticCurve.P);
         }
 
+        public static Point operator -(Point left, Point right)
+        {
+            return left + (-right);
+        }
+
         public static bool operator ==(Point left, Point right)
         {
             return left.Equals(right);
