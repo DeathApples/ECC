@@ -18,7 +18,7 @@ namespace ECDH.Services
             listOfElkiesAs.Clear(); listOfElkiesNs.Clear();
 
             BigInteger j = EllipticCurve.JInvariant;
-            BigInteger sqrt16p = CeilSqrt(16 * EllipticCurve.P);
+            BigInteger sqrt16p = MathService.CeilSqrt(16 * EllipticCurve.P);
 
             while (M < sqrt16p)
             {
@@ -28,34 +28,11 @@ namespace ECDH.Services
                 l = MillerRabinPrimalityTest.NextPrimeNumber(l);
             }
 
-            BigInteger t = RecoverTrace();
+            BigInteger t = RecoverTraceOfFrobeniusEndomorphism();
             return EllipticCurve.P + 1 - t;
         }
 
-        private static BigInteger CeilSqrt(BigInteger n)
-        {
-            BigInteger low = 1, high = n;
-            BigInteger result = n;
-
-            while (high >= low)
-            {
-                BigInteger middle = high - (high - low) / 2;
-
-                if (middle * middle >= n)
-                {
-                    result = middle;
-                    high = middle - 1;
-                }
-                else
-                {
-                    low = middle + 1;
-                }
-            }
-
-            return result;
-        }
-
-        private static (BigInteger r1, BigInteger r2) BabyStepGiantStep(BigInteger tE, BigInteger mE, BigInteger t1, BigInteger m1, BigInteger t2, BigInteger m2)
+        private static (BigInteger, BigInteger) BabyStepGiantStepAlgorithm(BigInteger tE, BigInteger mE, BigInteger t1, BigInteger m1, BigInteger t2, BigInteger m2)
         {
             Dictionary<Point, BigInteger> steps = [];
 
@@ -94,7 +71,7 @@ namespace ECDH.Services
             return (r1, r2);
         }
 
-        private static BigInteger RecoverTrace()
+        private static BigInteger RecoverTraceOfFrobeniusEndomorphism()
         {
             BigInteger tE = ChineseRemainderTheorem.Compute(listOfElkiesAs, listOfElkiesNs);
             BigInteger mE = listOfElkiesNs.Aggregate(1, (BigInteger acc, BigInteger val) => acc * val);
@@ -110,7 +87,7 @@ namespace ECDH.Services
             BigInteger t2 = ChineseRemainderTheorem.Compute(listOfAtkinSecondHalfAs, listOfAtkinSecondHalfNs);
             BigInteger m2 = listOfAtkinSecondHalfNs.Aggregate(1, (BigInteger acc, BigInteger val) => acc * val);
 
-            (BigInteger r1, BigInteger r2) = BabyStepGiantStep(tE, mE, t1, m1, t2, m2);
+            (BigInteger r1, BigInteger r2) = BabyStepGiantStepAlgorithm(tE, mE, t1, m1, t2, m2);
             return tE + mE * (m1 * r2 + m2 * r1);
         }
     }

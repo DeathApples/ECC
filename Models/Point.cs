@@ -6,7 +6,6 @@ namespace ECDH.Models
     public class Point
     {
         public BigInteger X { get; set; }
-        
         public BigInteger Y { get; set; }
 
         public static Point Infinity => new();
@@ -15,18 +14,19 @@ namespace ECDH.Models
         {
             get
             {
-                BigInteger left = EllipticCurve.GetPositiveValue(BigInteger.ModPow(Y, 2, EllipticCurve.P));
-                BigInteger right = EllipticCurve.GetPositiveValue(BigInteger.ModPow(X, 3, EllipticCurve.P) + EllipticCurve.A * X + EllipticCurve.B);
+                BigInteger left = NormilizeInField(BigInteger.ModPow(Y, 2, EllipticCurve.P));
+                BigInteger right = NormilizeInField(BigInteger.ModPow(X, 3, EllipticCurve.P) + EllipticCurve.A * X + EllipticCurve.B);
 
                 return left == right;
             }
         }
 
+        private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, EllipticCurve.P);
+        private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, EllipticCurve.P);
+
         public Point() {  }
-        
         public Point(Point point) { X = point.X; Y = point.Y; }
-        
-        public Point(BigInteger x, BigInteger y) { X = EllipticCurve.GetPositiveValue(x); Y = EllipticCurve.GetPositiveValue(y); }
+        public Point(BigInteger x, BigInteger y) { X = NormilizeInField(x); Y = NormilizeInField(y); }
 
         public static Point operator +(Point left, Point right)
         {
@@ -42,12 +42,12 @@ namespace ECDH.Models
             BigInteger x, y, lambda;
 
             if (left == right)
-                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ExtendedEuclideanAlgorithm.ModularInverse(2 * left.Y, EllipticCurve.P) % EllipticCurve.P;
+                lambda = (3 * BigInteger.Pow(left.X, 2) + EllipticCurve.A) * ModularInverse(2 * left.Y) % EllipticCurve.P;
             else
-                lambda = (right.Y - left.Y) * ExtendedEuclideanAlgorithm.ModularInverse(EllipticCurve.GetPositiveValue(right.X - left.X), EllipticCurve.P) % EllipticCurve.P;
+                lambda = (right.Y - left.Y) * ModularInverse(NormilizeInField(right.X - left.X)) % EllipticCurve.P;
 
-            x = EllipticCurve.GetPositiveValue(BigInteger.Pow(lambda, 2) - left.X - right.X);
-            y = EllipticCurve.GetPositiveValue(lambda * (left.X - x) - left.Y);
+            x = NormilizeInField(BigInteger.Pow(lambda, 2) - left.X - right.X);
+            y = NormilizeInField(lambda * (left.X - x) - left.Y);
 
             return new(x, y);
         }

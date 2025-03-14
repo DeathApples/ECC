@@ -11,9 +11,10 @@ namespace ECDH.Models
         public static BigInteger P { get; set; }
 
         public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
-        public static BigInteger JInvariant => GetPositiveValue(1728 * 4 * BigInteger.ModPow(A, 3, P) * ExtendedEuclideanAlgorithm.ModularInverse(Discriminant, P));
+        public static BigInteger JInvariant => NormilizeInField(1728 * 4 * BigInteger.ModPow(A, 3, P) * ModularInverse(Discriminant));
 
-        public static BigInteger GetPositiveValue(BigInteger value) => (value % P + P) % P;
+        private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, P);
+        private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, P);
 
         public static void GenerateParameters(bool isLarge = true)
         {
