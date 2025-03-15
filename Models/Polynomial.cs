@@ -5,36 +5,42 @@ namespace ECDH.Models
 {
     public class Polynomial
     {
-        private BigInteger[] coefficients;
+        public BigInteger[] Coefficients { get; private set; }
         public static BigInteger P { get; set; }
 
-        public int Degree => coefficients.Length - 1;
+        public int Degree => Coefficients.Length - 1;
 
         private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, P);
         private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, P);
 
         public Polynomial()
         {
-            coefficients = [];
+            Coefficients = [];
         }
 
         public Polynomial(int degree)
         {
-            coefficients = new BigInteger[degree + 1];
+            Coefficients = new BigInteger[degree + 1];
         }
 
         public Polynomial(params BigInteger[] numbers)
         {
-            coefficients = new BigInteger[numbers.Length];
-            Array.Copy(numbers, coefficients, numbers.Length);
+            Coefficients = new BigInteger[numbers.Length];
+            Array.Copy(numbers, Coefficients, numbers.Length);
 
             NormilizeCoefficients();
         }
 
+        public Polynomial(Polynomial polynomial)
+        {
+            Coefficients = new BigInteger[polynomial.Degree + 1];
+            Array.Copy(polynomial.Coefficients, Coefficients, polynomial.Degree + 1);
+        }
+
         public BigInteger this[int index]
         {
-            get => coefficients[index];
-            set => coefficients[index] = value;
+            get => Coefficients[index];
+            set => Coefficients[index] = value;
         }
 
         public static Polynomial operator +(Polynomial left, Polynomial right)
@@ -83,9 +89,29 @@ namespace ECDH.Models
 
             for (int i = 0; i <= left.Degree; i++)
             {
-                for (int j = 0; j <= right.Degree; j++)
+                for (int k = 0; k <= right.Degree; k++)
                 {
-                    result[i + j] = NormilizeInField(result[i + j] + left[i] * right[j]);
+                    result[i + k] = NormilizeInField(result[i + k] + left[i] * right[k]);
+                }
+            }
+
+            result.NormilizeDegree();
+            return result;
+        }
+
+        public static Polynomial operator /(Polynomial left, Polynomial right)
+        {
+            var newDegree = left.Degree - right.Degree;
+            Polynomial result = new(newDegree);
+            Polynomial temp = new(left);
+
+            for (int i = newDegree; i >= 0; i--)
+            {
+                result[i] = NormilizeInField(temp[right.Degree + i] * ModularInverse(right[right.Degree]));
+
+                for (int k = right.Degree + i - 1; k >= i; k--)
+                {
+                    temp[k] = NormilizeInField(temp[k] - result[i] * right[k - i]);
                 }
             }
 
@@ -95,13 +121,13 @@ namespace ECDH.Models
 
         public void NormilizeDegree()
         {
-            while (coefficients.Length > 1)
+            while (Coefficients.Length > 1)
             {
-                if (coefficients[^1] == 0)
+                if (Coefficients[^1] == 0)
                 {
-                    BigInteger[] temp = new BigInteger[coefficients.Length - 1];
-                    Array.Copy(coefficients, temp, coefficients.Length - 1);
-                    coefficients = temp;
+                    BigInteger[] temp = new BigInteger[Coefficients.Length - 1];
+                    Array.Copy(Coefficients, temp, Coefficients.Length - 1);
+                    Coefficients = temp;
                 }
                 else
                 {
@@ -112,9 +138,9 @@ namespace ECDH.Models
 
         public void NormilizeCoefficients()
         {
-            for (int i = 0; i < coefficients.Length; i++)
+            for (int i = 0; i < Coefficients.Length; i++)
             {
-                coefficients[i] = NormilizeInField(coefficients[i]);
+                Coefficients[i] = NormilizeInField(Coefficients[i]);
             }
         }
     }
