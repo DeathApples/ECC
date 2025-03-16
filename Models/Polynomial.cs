@@ -5,47 +5,53 @@ namespace ECDH.Models
 {
     public class Polynomial
     {
-        public BigInteger[] Coefficients { get; private set; }
         public static BigInteger P { get; set; }
+        public Dictionary<BigInteger, BigInteger> MonomialDictionary { get; private set; }
 
-        public int Degree => Coefficients.Length - 1;
+        public BigInteger Degree => MonomialDictionary.Count > 0 ? MonomialDictionary.Keys.Max() : 0;
 
         private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, P);
         private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, P);
 
         public Polynomial()
         {
-            Coefficients = [];
+            MonomialDictionary = [];
         }
 
-        public Polynomial(int degree)
+        public Polynomial(BigInteger degree)
         {
-            Coefficients = new BigInteger[degree + 1];
-        }
-
-        public Polynomial(params BigInteger[] numbers)
-        {
-            Coefficients = new BigInteger[numbers.Length];
-            Array.Copy(numbers, Coefficients, numbers.Length);
-
-            NormilizeCoefficients();
+            MonomialDictionary = [];
+            MonomialDictionary[degree] = 0;
         }
 
         public Polynomial(Polynomial polynomial)
         {
-            Coefficients = new BigInteger[polynomial.Degree + 1];
-            Array.Copy(polynomial.Coefficients, Coefficients, polynomial.Degree + 1);
+            MonomialDictionary = new(polynomial.MonomialDictionary);
         }
 
-        public BigInteger this[int index]
+        public Polynomial(params (BigInteger power, BigInteger coefficient)[] numbers)
         {
-            get => Coefficients[index];
-            set => Coefficients[index] = value;
+            MonomialDictionary = [];
+
+            for (int i = 0; i < numbers.Length; i++)
+                MonomialDictionary[numbers[i].power] = NormilizeInField(numbers[i].coefficient);
+        }
+
+        public BigInteger this[BigInteger index]
+        {
+            get => MonomialDictionary.TryGetValue(index, out BigInteger value) ? value : 0;
+            set
+            {
+                if (value == 0)
+                    MonomialDictionary.Remove(index);
+                else
+                    MonomialDictionary[index] = value;
+            }
         }
 
         public static Polynomial operator +(Polynomial left, Polynomial right)
         {
-            Polynomial result = new (Math.Max(left.Degree, right.Degree));
+            Polynomial result = new(BigInteger.Max(left.Degree, right.Degree));
 
             for (int i = 0; i <= result.Degree; i++)
             {
@@ -59,13 +65,12 @@ namespace ECDH.Models
                     result[i] = right[i];
             }
 
-            result.NormilizeDegree();
             return result;
         }
 
         public static Polynomial operator -(Polynomial left, Polynomial right)
         {
-            Polynomial result = new(Math.Max(left.Degree, right.Degree));
+            Polynomial result = new(BigInteger.Max(left.Degree, right.Degree));
 
             for (int i = 0; i <= result.Degree; i++)
             {
@@ -79,7 +84,6 @@ namespace ECDH.Models
                     result[i] = P - right[i];
             }
 
-            result.NormilizeDegree();
             return result;
         }
 
@@ -95,7 +99,6 @@ namespace ECDH.Models
                 }
             }
 
-            result.NormilizeDegree();
             return result;
         }
 
@@ -105,43 +108,17 @@ namespace ECDH.Models
             Polynomial result = new(newDegree);
             Polynomial temp = new(left);
 
-            for (int i = newDegree; i >= 0; i--)
+            for (BigInteger i = newDegree; i >= 0; i--)
             {
                 result[i] = NormilizeInField(temp[right.Degree + i] * ModularInverse(right[right.Degree]));
 
-                for (int k = right.Degree + i - 1; k >= i; k--)
+                for (BigInteger k = right.Degree + i - 1; k >= i; k--)
                 {
                     temp[k] = NormilizeInField(temp[k] - result[i] * right[k - i]);
                 }
             }
 
-            result.NormilizeDegree();
             return result;
-        }
-
-        public void NormilizeDegree()
-        {
-            while (Coefficients.Length > 1)
-            {
-                if (Coefficients[^1] == 0)
-                {
-                    BigInteger[] temp = new BigInteger[Coefficients.Length - 1];
-                    Array.Copy(Coefficients, temp, Coefficients.Length - 1);
-                    Coefficients = temp;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-
-        public void NormilizeCoefficients()
-        {
-            for (int i = 0; i < Coefficients.Length; i++)
-            {
-                Coefficients[i] = NormilizeInField(Coefficients[i]);
-            }
         }
     }
 }

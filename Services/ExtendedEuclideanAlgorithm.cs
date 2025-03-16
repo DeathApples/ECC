@@ -25,21 +25,17 @@ namespace ECDH.Services
 
         public static (Polynomial gcd, Polynomial s, Polynomial t) Compute(Polynomial n, Polynomial m)
         {
-            Polynomial t = new(0), t0 = new(0);
-            t[0] = 1; t0[0] = 0;
-
-            Polynomial s = new(0), s0 = new(0);
-            s[0] = 0; s0[0] = 1;
-
+            Polynomial s = new((0, 0)), s0 = new((0, 1));
+            Polynomial t = new((0, 1)), t0 = new((0, 0));
             Polynomial r = new(m), r0 = new(n);
             Polynomial q;
 
             while (r.Degree > 0 || r[0] > 0)
             {
                 q = r0 / r;
-                (r0, r) = (r, r0 - (q * r));
-                (s0, s) = (s, s0 - (q * s));
-                (t0, t) = (t, t0 - (q * t));
+                (r0, r) = (r, r0 - q * r);
+                (s0, s) = (s, s0 - q * s);
+                (t0, t) = (t, t0 - q * t);
             }
 
             return (r0, s0, t0);
