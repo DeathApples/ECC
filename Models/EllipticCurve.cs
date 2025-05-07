@@ -39,9 +39,9 @@ namespace ECDH.Models
 
             do
             {
-                point.X = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next((int)P);
-                point.Y = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next((int)P);
-            } while (!point.IsOnCurve);
+                point.X = isLarge ? NormilizeInField(new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32)))) : rnd.Next((int)P);
+                point.Y = isLarge ? NormilizeInField(new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32)))) : rnd.Next((int)P);
+            } while (!point.IsOnCurve || point == Point.Infinity);
 
             return point;
         }

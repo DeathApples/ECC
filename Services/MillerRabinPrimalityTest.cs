@@ -22,6 +22,9 @@ namespace ECDH.Services
 
         public static BigInteger NextPrimeNumber(BigInteger number)
         {
+            if (number == 2)
+                return 3;
+
             do
             {
                 number += 2;
@@ -54,7 +57,7 @@ namespace ECDH.Services
 
                 do
                 {
-                    a = new BigInteger(RandomNumberGenerator.GetBytes(number.ToByteArray().Length));
+                    a = new BigInteger(RandomNumberGenerator.GetBytes(number.ToByteArray().Length), true);
                 }
                 while (a < 2 || a >= number - 2);
 

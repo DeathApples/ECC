@@ -120,5 +120,33 @@ namespace ECDH.Models
 
             return result;
         }
+
+        public static bool operator ==(Polynomial left, Polynomial right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Polynomial left, Polynomial right)
+        {
+            return !left.Equals(right);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+
+            if (obj is Polynomial polynomial)
+            {
+                if (MonomialDictionary.Count != polynomial.MonomialDictionary.Count) return false;
+                return MonomialDictionary.All(kvp => polynomial.MonomialDictionary.TryGetValue(kvp.Key, out var value) && value.Equals(kvp.Value));
+            }
+            else
+                throw new ArgumentException("Argument “obj” must be type of Class “Polynomial”", nameof(obj));
+        }
+
+        public override int GetHashCode()
+        {
+            return MonomialDictionary.GetHashCode();
+        }
     }
 }

@@ -56,6 +56,13 @@ namespace ECDH.Models
         {
             Point result = Infinity;
             Point addend = new(point);
+            int sign = 1;
+
+            if(number < 0)
+            {
+                number = -number;
+                sign = -sign;
+            }
 
             while (number > 0)
             {
@@ -66,24 +73,12 @@ namespace ECDH.Models
                 number >>= 1;
             }
 
-            return result;
+            return sign >= 0 ? result : -result;
         }
 
         public static Point operator *(Point point, BigInteger number)
         {
-            Point result = Infinity;
-            Point addend = new(point);
-
-            while (number > 0)
-            {
-                if ((number & 1) == 1)
-                    result += addend;
-
-                addend += addend;
-                number >>= 1;
-            }
-
-            return result;
+            return number * point;
         }
 
         public static Point operator -(Point point)

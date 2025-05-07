@@ -18,8 +18,36 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Border Style="{StaticResource MainBorder}">
+    <!--<Border Style="{StaticResource MainBorder}">
         <TextBlock Style="{StaticResource TitleTextBlock}" Text="В разработке :)" />
-    </Border>
+    </Border>-->
+
+    <Grid>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="Кривая:" />
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="Модуль:" />
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="Кол-во точек:" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding FormulaEllipticCurve}" />
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding PrimeNumber}" />
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="{Binding PointsNumber}" />
+        </StackPanel>
+
+        <Button Grid.ColumnSpan="2" Grid.Row="1" Width="240" Height="32" Command="{Binding GetPointsNumberCommand}" /> 
+
+    </Grid>
     
 </Page>
