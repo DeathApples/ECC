@@ -36,11 +36,11 @@ namespace ECDH.ViewModels
 
         public DiffieHellmanViewModel()
         {
-            Polynomial.P = 97;
+            Polynomial.Prime = 97;
 
             EllipticCurve.A = 2;
             EllipticCurve.B = 3;
-            EllipticCurve.P = 97; _primeNumber = "97";
+            EllipticCurve.Prime = 97; _primeNumber = "97";
             _formulaEllipticCurve = EllipticCurve.ToString();
 
             GetPointsNumberCommand = new RelayCommand(OnGetPointsNumberCommandExecuted);

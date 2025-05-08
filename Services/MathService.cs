@@ -18,18 +18,12 @@ namespace ECDH.Services
                     result = middle;
                     high = middle - 1;
                 }
+                
                 else
-                {
                     low = middle + 1;
-                }
             }
 
             return result;
-        }
-
-        public static BigInteger NormilizeInField(BigInteger a, BigInteger p)
-        {
-            return (a % p + p) % p;
         }
     }
 }

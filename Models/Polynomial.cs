@@ -1,17 +1,13 @@
-﻿using ECDH.Services;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace ECDH.Models
 {
     public class Polynomial
     {
-        public static BigInteger P { get; set; }
-        public Dictionary<BigInteger, BigInteger> MonomialDictionary { get; private set; }
+        public static BigInteger Prime { get; set; }
+        public Dictionary<BigInteger, FiniteFieldElement> MonomialDictionary { get; private set; }
 
         public BigInteger Degree => MonomialDictionary.Count > 0 ? MonomialDictionary.Keys.Max() : 0;
-
-        private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, P);
-        private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, P);
 
         public Polynomial()
         {
@@ -21,7 +17,7 @@ namespace ECDH.Models
         public Polynomial(BigInteger degree)
         {
             MonomialDictionary = [];
-            MonomialDictionary[degree] = 0;
+            MonomialDictionary[degree] = new(0, Prime);
         }
 
         public Polynomial(Polynomial polynomial)
@@ -29,20 +25,21 @@ namespace ECDH.Models
             MonomialDictionary = new(polynomial.MonomialDictionary);
         }
 
-        public Polynomial(params (BigInteger power, BigInteger coefficient)[] numbers)
+        public Polynomial(params (BigInteger power, FiniteFieldElement coefficient)[] numbers)
         {
             MonomialDictionary = [];
 
             for (int i = 0; i < numbers.Length; i++)
-                MonomialDictionary[numbers[i].power] = NormilizeInField(numbers[i].coefficient);
+                MonomialDictionary[numbers[i].power] = numbers[i].coefficient;
         }
 
-        public BigInteger this[BigInteger index]
+        public FiniteFieldElement this[BigInteger index]
         {
-            get => MonomialDictionary.TryGetValue(index, out BigInteger value) ? value : 0;
+            get => MonomialDictionary.TryGetValue(index, out FiniteFieldElement? value) ? value : new(0, Prime);
+            
             set
             {
-                if (value == 0)
+                if (value.Value == 0)
                     MonomialDictionary.Remove(index);
                 else
                     MonomialDictionary[index] = value;
@@ -53,10 +50,10 @@ namespace ECDH.Models
         {
             Polynomial result = new(BigInteger.Max(left.Degree, right.Degree));
 
-            for (int i = 0; i <= result.Degree; i++)
+            for (BigInteger i = 0; i <= result.Degree; i++)
             {
                 if (i <= left.Degree && i <= right.Degree)
-                    result[i] = NormilizeInField(left[i] + right[i]);
+                    result[i] = left[i] + right[i];
 
                 else if (i <= left.Degree)
                     result[i] = left[i];
@@ -72,16 +69,16 @@ namespace ECDH.Models
         {
             Polynomial result = new(BigInteger.Max(left.Degree, right.Degree));
 
-            for (int i = 0; i <= result.Degree; i++)
+            for (BigInteger i = 0; i <= result.Degree; i++)
             {
                 if (i <= left.Degree && i <= right.Degree)
-                    result[i] = NormilizeInField(left[i] - right[i]);
+                    result[i] = left[i] - right[i];
 
                 else if (i <= left.Degree)
                     result[i] = left[i];
 
                 else if (i <= right.Degree)
-                    result[i] = P - right[i];
+                    result[i] = -right[i];
             }
 
             return result;
@@ -91,45 +88,32 @@ namespace ECDH.Models
         {
             Polynomial result = new(left.Degree + right.Degree);
 
-            for (int i = 0; i <= left.Degree; i++)
-            {
-                for (int k = 0; k <= right.Degree; k++)
-                {
-                    result[i + k] = NormilizeInField(result[i + k] + left[i] * right[k]);
-                }
-            }
+            for (BigInteger i = 0; i <= left.Degree; i++)
+                for (BigInteger k = 0; k <= right.Degree; k++)
+                    result[i + k] = result[i + k] + left[i] * right[k];
 
             return result;
         }
 
         public static Polynomial operator /(Polynomial left, Polynomial right)
         {
-            var newDegree = left.Degree - right.Degree;
-            Polynomial result = new(newDegree);
+            Polynomial result = new(left.Degree - right.Degree);
             Polynomial temp = new(left);
 
-            for (BigInteger i = newDegree; i >= 0; i--)
+            for (BigInteger i = result.Degree; i >= 0; i--)
             {
-                result[i] = NormilizeInField(temp[right.Degree + i] * ModularInverse(right[right.Degree]));
+                result[i] = temp[right.Degree + i] / right[right.Degree];
 
                 for (BigInteger k = right.Degree + i - 1; k >= i; k--)
-                {
-                    temp[k] = NormilizeInField(temp[k] - result[i] * right[k - i]);
-                }
+                    temp[k] -= result[i] * right[k - i];
             }
 
             return result;
         }
 
-        public static bool operator ==(Polynomial left, Polynomial right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Polynomial left, Polynomial right) => left.Equals(right);
 
-        public static bool operator !=(Polynomial left, Polynomial right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Polynomial left, Polynomial right) => !left.Equals(right);
 
         public override bool Equals(object? obj)
         {
@@ -144,9 +128,6 @@ namespace ECDH.Models
                 throw new ArgumentException("Argument “obj” must be type of Class “Polynomial”", nameof(obj));
         }
 
-        public override int GetHashCode()
-        {
-            return MonomialDictionary.GetHashCode();
-        }
+        public override int GetHashCode() => MonomialDictionary.GetHashCode();
     }
 }

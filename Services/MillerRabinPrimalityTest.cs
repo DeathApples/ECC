@@ -7,28 +7,14 @@ namespace ECDH.Services
     {
         public static int PrecisionFactor { get; private set; } = 100;
 
-        public static BigInteger GeneratePrimeNumber(bool isLarge = true)
-        {
-            var rnd = new Random();
-            BigInteger number;
-
-            do
-            {
-                number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(32), true) : rnd.Next(11, 500);
-            } while (!IsPrimeNumber(number));
-
-            return number;
-        }
-
         public static BigInteger NextPrimeNumber(BigInteger number)
         {
             if (number == 2)
                 return 3;
 
             do
-            {
                 number += 2;
-            } while (!IsPrimeNumber(number));
+            while (!IsPrimeNumber(number));
 
             return number;
         }
@@ -56,9 +42,7 @@ namespace ECDH.Services
                 BigInteger a;
 
                 do
-                {
                     a = new BigInteger(RandomNumberGenerator.GetBytes(number.ToByteArray().Length), true);
-                }
                 while (a < 2 || a >= number - 2);
 
                 BigInteger x = BigInteger.ModPow(a, t, number);

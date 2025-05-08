@@ -1,65 +1,52 @@
-﻿using System.Numerics;
+﻿using ECDH.Models;
+using System.Numerics;
 
 namespace ECDH.Services
 {
     public static class ChineseRemainderTheorem
     {
-        public static BigInteger Compute(List<BigInteger> listOfAs, List<BigInteger> listOfNs)
+        public static FiniteFieldElement Compute(List<FiniteFieldElement> remainders)
         {
-            CheckRequirements(listOfAs, listOfNs);
+            CheckRequirements(remainders);
 
-            var prodN = BigInteger.One;
-            foreach (var n in listOfNs)
+            var M = BigInteger.One;
+            
+            foreach (var remainder in remainders)
+                M *= remainder.Prime;
+
+            FiniteFieldElement result = new(0, M);
+            
+            for (var i = 0; i < remainders.Count; i++)
             {
-                prodN *= n;
-            }
+                BigInteger prime = remainders[i].Prime;
+                var Mi = M / prime;
+                var MiInverse = new FiniteFieldElement(Mi, prime).Inverse().Value;
 
-            var result = BigInteger.Zero;
-            for (var i = 0; i < listOfNs.Count; i++)
-            {
-                var a_i = listOfAs[i];
-                var n_i = listOfNs[i];
-                var modulus_i = prodN / n_i;
-
-                var bezout_modulus_i = ExtendedEuclideanAlgorithm.Compute(n_i, modulus_i).t;
-                result += a_i * bezout_modulus_i * modulus_i;
-            }
-
-            result %= prodN;
-            if (result < 0)
-            {
-                result += prodN;
+                result += remainders[i].Value * Mi * MiInverse;
             }
 
             return result;
         }
 
-        private static void CheckRequirements(List<BigInteger> listOfAs, List<BigInteger> listOfNs)
+        private static void CheckRequirements(List<FiniteFieldElement> remainders)
         {
-            if (listOfAs == null || listOfNs == null || listOfAs.Count != listOfNs.Count)
-            {
-                throw new ArgumentException("The parameters 'listOfAs' and 'listOfNs' must not be null and have to be of equal length!");
-            }
+            if (remainders == null)
+                throw new ArgumentException("The parameter 'remainders' must not be null!");
 
-            if (listOfNs.Any(x => x <= 1))
-            {
-                throw new ArgumentException($"The value {listOfNs.First(x => x <= 1)} for some n_i is smaller than or equal to 1.");
-            }
+            if (remainders.Any(x => x.Prime <= 1))
+                throw new ArgumentException($"The value {remainders.First(x => x.Prime <= 1)} for some n_i is smaller than or equal to 1.");
 
-            if (listOfAs.Any(x => x < 0))
-            {
-                throw new ArgumentException($"The value {listOfAs.First(x => x < 0)} for some a_i is smaller than 0.");
-            }
+            if (remainders.Any(x => x.Value < 0))
+                throw new ArgumentException($"The value {remainders.First(x => x.Value < 0)} for some a_i is smaller than 0.");
 
-            for (var i = 0; i < listOfNs.Count; i++)
+            for (var i = 0; i < remainders.Count; i++)
             {
-                for (var j = i + 1; j < listOfNs.Count; j++)
+                for (var j = i + 1; j < remainders.Count; j++)
                 {
                     BigInteger gcd;
-                    if ((gcd = ExtendedEuclideanAlgorithm.Compute(listOfNs[i], listOfNs[j]).gcd) != BigInteger.One)
-                    {
-                        throw new ArgumentException($"The GCD of n_{i} = {listOfNs[i]} and n_{j} = {listOfNs[j]} equals {gcd} and thus these values aren't coprime.");
-                    }
+                    
+                    if ((gcd = BigInteger.GreatestCommonDivisor(remainders[i].Prime, remainders[j].Prime)) != 1)
+                        throw new ArgumentException($"The GCD of n_{i} = {remainders[i].Prime} and n_{j} = {remainders[j].Prime} equals {gcd} and thus these values aren't coprime.");
                 }
             }
         }

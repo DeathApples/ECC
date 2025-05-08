@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ECDH.Models;
 using ECDH.Commands;
 using ECDH.Services;
+using System.Numerics;
 
 namespace ECDH.ViewModels
 {
@@ -15,7 +16,7 @@ namespace ECDH.ViewModels
             get => _parameterA;
             set
             {
-                if (int.TryParse(value, out var a))
+                if (BigInteger.TryParse(value, out var a))
                 {
                     EllipticCurve.A = a;
                     CreateGraphics();
@@ -31,7 +32,7 @@ namespace ECDH.ViewModels
             get => _parameterB;
             set
             {
-                if (int.TryParse(value, out var b))
+                if (BigInteger.TryParse(value, out var b))
                 {
                     EllipticCurve.B = b;
                     CreateGraphics();
@@ -47,9 +48,9 @@ namespace ECDH.ViewModels
             get => _primeNumber;
             set
             {
-                if (int.TryParse(value, out var p))
+                if (BigInteger.TryParse(value, out var p))
                 {
-                    EllipticCurve.P = p;
+                    EllipticCurve.Prime = p;
                     CreateGraphics();
                 }
 
@@ -64,7 +65,7 @@ namespace ECDH.ViewModels
             set => SetProperty(ref _formulaEllipticCurve, value);
         }
 
-        private readonly Point _pointP;
+        private readonly EllipticCurvePoint _pointP;
 
         private string? _pointPx;
         public string? PointPx
@@ -72,9 +73,9 @@ namespace ECDH.ViewModels
             get => _pointPx;
             set
             {
-                if (int.TryParse(value, out var x))
+                if (BigInteger.TryParse(value, out var x))
                 {
-                    _pointP.X = x;
+                    _pointP.X = new(x, EllipticCurve.Prime);
                     AddPoint();
                 }
 
@@ -88,9 +89,9 @@ namespace ECDH.ViewModels
             get => _pointPy;
             set
             {
-                if (int.TryParse(value, out var y))
+                if (BigInteger.TryParse(value, out var y))
                 {
-                    _pointP.Y = y;
+                    _pointP.Y = new(y, EllipticCurve.Prime);
                     AddPoint();
                 }
 
@@ -98,7 +99,7 @@ namespace ECDH.ViewModels
             }
         }
 
-        private readonly Point _pointQ;
+        private readonly EllipticCurvePoint _pointQ;
 
         private string? _pointQx;
         public string? PointQx
@@ -108,7 +109,7 @@ namespace ECDH.ViewModels
             {
                 if (int.TryParse(value, out var x))
                 {
-                    _pointQ.X = x;
+                    _pointQ.X = new(x, EllipticCurve.Prime);
                     AddPoint();
                 }
 
@@ -124,7 +125,7 @@ namespace ECDH.ViewModels
             {
                 if (int.TryParse(value, out var y))
                 {
-                    _pointQ.Y = y;
+                    _pointQ.Y = new(y, EllipticCurve.Prime);
                     AddPoint();
                 }
 
@@ -132,7 +133,7 @@ namespace ECDH.ViewModels
             }
         }
 
-        private Point _pointR;
+        private EllipticCurvePoint _pointR;
 
         private string? _pointRx;
         public string? PointRx
@@ -166,7 +167,7 @@ namespace ECDH.ViewModels
             }
         }
 
-        private readonly Point _pointS;
+        private readonly EllipticCurvePoint _pointS;
 
         private string? _pointSx;
         public string? PointSx
@@ -176,7 +177,7 @@ namespace ECDH.ViewModels
             {
                 if (int.TryParse(value, out var x))
                 {
-                    _pointS.X = x;
+                    _pointS.X = new(x, EllipticCurve.Prime);
                     MultiplyPoint();
                 }
 
@@ -192,7 +193,7 @@ namespace ECDH.ViewModels
             {
                 if (int.TryParse(value, out var y))
                 {
-                    _pointS.Y = y;
+                    _pointS.Y = new(y, EllipticCurve.Prime);
                     MultiplyPoint();
                 }
 
@@ -200,7 +201,7 @@ namespace ECDH.ViewModels
             }
         }
 
-        private Point _pointT;
+        private EllipticCurvePoint _pointT;
 
         private string? _pointTx;
         public string? PointTx
@@ -242,14 +243,14 @@ namespace ECDH.ViewModels
         private void OnGeneratePrimeCommandExecuted(object? parameter)
         {
             EllipticCurve.GeneratePrimeNumber(false);
-            PrimeNumber = EllipticCurve.P.ToString();
+            PrimeNumber = EllipticCurve.Prime.ToString();
         }
 
         public ICommand GeneratePointCommand { get; }
         private void OnGeneratePointCommandExecuted(object? parameter)
         {
             if (parameter is string pointName)
-                GeneratePoint(pointName);
+                GetRandomPoint(pointName);
         }
 
         public ICommand GenerateMultiplierCommand { get; }
@@ -264,7 +265,7 @@ namespace ECDH.ViewModels
             if (EllipticCurve.Discriminant == 0)
                 return;
 
-            if (!MillerRabinPrimalityTest.IsPrimeNumber(EllipticCurve.P))
+            if (!MillerRabinPrimalityTest.IsPrimeNumber(EllipticCurve.Prime))
                 return;
 
             var curvePlotModel = OxyplotService.CreatePlotModel();
@@ -277,24 +278,24 @@ namespace ECDH.ViewModels
             FormulaEllipticCurve = EllipticCurve.ToString();
         }
 
-        private void GeneratePoint(string pointName)
+        private void GetRandomPoint(string pointName)
         {
-            var point = EllipticCurve.GeneratePoint(false);
+            var point = EllipticCurve.GetRandomPoint(false);
             switch (pointName)
             {
                 case "P":
-                    PointPx = point.X.ToString();
-                    PointPy = point.Y.ToString();
+                    PointPx = point.IsInfinite ? "∞" : point.X.Value.ToString();
+                    PointPy = point.IsInfinite ? "∞" : point.Y.Value.ToString();
                     break;
 
                 case "Q":
-                    PointQx = point.X.ToString();
-                    PointQy = point.Y.ToString();
+                    PointQx = point.IsInfinite ? "∞" : point.X.Value.ToString();
+                    PointQy = point.IsInfinite ? "∞" : point.Y.Value.ToString();
                     break;
 
                 case "S":
-                    PointSx = point.X.ToString();
-                    PointSy = point.Y.ToString();
+                    PointSx = point.IsInfinite ? "∞" : point.X.Value.ToString();
+                    PointSy = point.IsInfinite ? "∞" : point.Y.Value.ToString();
                     break;
 
                 default:
@@ -304,21 +305,21 @@ namespace ECDH.ViewModels
 
         private void AddPoint()
         {
-            if((_pointP.IsOnCurve || _pointP == Point.Infinity) && (_pointQ.IsOnCurve || _pointQ == Point.Infinity))
+            if(_pointP.IsOnCurve && _pointQ.IsOnCurve)
             {
                 _pointR = _pointP + _pointQ;
-                PointRx = _pointR.X.ToString();
-                PointRy = _pointR.Y.ToString();
+                PointRx = _pointR.IsInfinite ? "∞" : _pointR.X.Value.ToString();
+                PointRy = _pointR.IsInfinite ? "∞" : _pointR.Y.Value.ToString();
             }
         }
 
         private void MultiplyPoint()
         {
-            if (_pointS.IsOnCurve || _pointS == Point.Infinity)
+            if (_pointS.IsOnCurve)
             {
                 _pointT = _n * _pointS;
-                PointTx = _pointT.X.ToString();
-                PointTy = _pointT.Y.ToString();
+                PointTx = _pointT.IsInfinite ? "∞" : _pointT.X.Value.ToString();
+                PointTy = _pointT.IsInfinite ? "∞" : _pointT.Y.Value.ToString();
             }
         }
 
@@ -331,7 +332,7 @@ namespace ECDH.ViewModels
 
             EllipticCurve.A = 2; _parameterA = "2";
             EllipticCurve.B = 3; _parameterB = "3";
-            EllipticCurve.P = 97; _primeNumber = "97";
+            EllipticCurve.Prime = 97; _primeNumber = "97";
             _formulaEllipticCurve = EllipticCurve.ToString();
 
             _curvePlotModel = OxyplotService.CreatePlotModel();
@@ -341,18 +342,18 @@ namespace ECDH.ViewModels
             OxyplotService.DrawEllipticCurve(CurvePlotModel);
 
             _pointQ = new(95, 31); _pointP = new(17, 10);
-            _pointPx = _pointP.X.ToString(); _pointPy = _pointP.Y.ToString();
-            _pointQx = _pointQ.X.ToString(); _pointQy = _pointQ.Y.ToString();
+            _pointPx = _pointP.X.Value.ToString(); _pointPy = _pointP.Y.Value.ToString();
+            _pointQx = _pointQ.X.Value.ToString(); _pointQy = _pointQ.Y.Value.ToString();
 
             _pointR = _pointP + _pointQ;
-            _pointRx = _pointR.X.ToString(); _pointRy = _pointR.Y.ToString();
+            _pointRx = _pointR.X.Value.ToString(); _pointRy = _pointR.Y.Value.ToString();
 
             _n = 2;  _pointS = new(3, 6);
             _multiplier = _n.ToString();
-            _pointSx = _pointS.X.ToString(); _pointSy = _pointS.Y.ToString();
+            _pointSx = _pointS.X.Value.ToString(); _pointSy = _pointS.Y.Value.ToString();
 
             _pointT = _n * _pointS;
-            _pointTx = _pointT.X.ToString(); _pointTy = _pointT.Y.ToString();
+            _pointTx = _pointT.X.Value.ToString(); _pointTy = _pointT.Y.Value.ToString();
         }
     }
 }

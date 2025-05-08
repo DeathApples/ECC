@@ -45,9 +45,7 @@ namespace ECDH.Services
             BigInteger d = 2;
 
             while (Compute(d, l) != -1)
-            {
                 d++;
-            }
 
             return d;
         }

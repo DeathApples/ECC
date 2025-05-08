@@ -4,44 +4,49 @@ using System.Security.Cryptography;
 
 namespace ECDH.Models
 {
-    public static class EllipticCurve
+    public class EllipticCurve
     {
-        public static BigInteger A { get; set; }
-        public static BigInteger B { get; set; }
-        public static BigInteger P { get; set; }
-
+        public static BigInteger A { get; set; } = 2;
+        public static BigInteger B { get; set; } = 3;
+        public static BigInteger Prime { get; set; } = 97;
         public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
-        public static BigInteger JInvariant => NormilizeInField(1728 * 4 * BigInteger.ModPow(A, 3, P) * ModularInverse(Discriminant));
 
-        private static BigInteger NormilizeInField(BigInteger a) => MathService.NormilizeInField(a, P);
-        private static BigInteger ModularInverse(BigInteger a) => ExtendedEuclideanAlgorithm.ModularInverse(a, P);
+        private static BigInteger GetLargeRandomNumber(bool isUnsigned) => new(RandomNumberGenerator.GetBytes(new Random().Next(32)), isUnsigned);
+
+        private static int GetRandomNumber(int minValue, int maxValue) => new Random().Next(minValue, maxValue);
 
         public static void GenerateParameters(bool isLarge = true)
         {
-            var rnd = new Random();
-
-            do 
+            do
             {
-                A = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32) - 16;
-                B = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32))) : rnd.Next(32) - 16;
-            } while (Discriminant == 0);
+                A = isLarge ? GetLargeRandomNumber(false) : GetRandomNumber(-16, 16);
+                B = isLarge ? GetLargeRandomNumber(false) : GetRandomNumber(-16, 16);
+            }
+            while (Discriminant == 0);
         }
 
         public static void GeneratePrimeNumber(bool isLarge = true)
         {
-            P = MillerRabinPrimalityTest.GeneratePrimeNumber(isLarge);
+            BigInteger number;
+
+            do
+                number = isLarge ? GetLargeRandomNumber(true) : GetRandomNumber(11, 500);
+            while (!MillerRabinPrimalityTest.IsPrimeNumber(number));
+
+            Prime = number;
         }
 
-        public static Point GeneratePoint(bool isLarge = true)
+        public static EllipticCurvePoint GetRandomPoint(bool isLarge = true)
         {
-            var rnd = new Random();
-            var point = new Point();
+            EllipticCurvePoint point;
 
             do
             {
-                point.X = isLarge ? NormilizeInField(new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32)))) : rnd.Next((int)P);
-                point.Y = isLarge ? NormilizeInField(new BigInteger(RandomNumberGenerator.GetBytes(rnd.Next(32)))) : rnd.Next((int)P);
-            } while (!point.IsOnCurve || point == Point.Infinity);
+                var x = isLarge ? GetLargeRandomNumber(false) : GetRandomNumber(-(int)Prime, (int)Prime);
+                var y = isLarge ? GetLargeRandomNumber(false) : GetRandomNumber(-(int)Prime, (int)Prime);
+                point = new(x, y);
+            }
+            while (!point.IsOnCurve);
 
             return point;
         }
@@ -51,10 +56,22 @@ namespace ECDH.Models
             string formula = "y² = x³";
 
             if (A != 0)
-                formula += A == 1 ? " + x" : A == -1 ? " - x" : A < 0 ? $" - {BigInteger.Abs(A)}x" : $" + {A}x";
+                formula += A == 1
+                    ? " + x"
+                    : A == -1
+                    ? " - x"
+                    : A < 0
+                    ? $" - {-A}x"
+                    : A > 0
+                    ? $" + {A}x"
+                    : "";
 
             if (B != 0)
-                formula += B < 0 ? $" - {BigInteger.Abs(B)}" : $" + {B}";
+                formula += B < 0
+                    ? $" - {-B}"
+                    : B > 0
+                    ? $" + {B}"
+                    : "";
 
             return formula;
         }

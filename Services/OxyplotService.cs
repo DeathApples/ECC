@@ -15,7 +15,7 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = isPointTable ? (int)EllipticCurve.P : 7,
+                Maximum = isPointTable ? (int)EllipticCurve.Prime : 7,
                 Minimum = isPointTable ? 0 : -7,
                 Position = AxisPosition.Left,
                 PositionAtZeroCrossing = !isPointTable,
@@ -32,7 +32,7 @@ namespace ECDH.Services
 
             curvePlotModel.Axes.Add(new LinearAxis
             {
-                Maximum = isPointTable ? (int)EllipticCurve.P : 7,
+                Maximum = isPointTable ? (int)EllipticCurve.Prime : 7,
                 Minimum = isPointTable ? 0 : -7,
                 Position = AxisPosition.Bottom,
                 PositionAtZeroCrossing = !isPointTable,
@@ -140,7 +140,7 @@ namespace ECDH.Services
                 MarkerSize = 3
             };
 
-            int a = (int)EllipticCurve.A, b = (int)EllipticCurve.B, p = (int)EllipticCurve.P;
+            int a = (int)EllipticCurve.A, b = (int)EllipticCurve.B, p = (int)EllipticCurve.Prime;
             var leftSide = new List<int>(); var rightSide = new List<int>();
             for (int i = 0; i < p; i++)
             {

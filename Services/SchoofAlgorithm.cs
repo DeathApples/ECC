@@ -5,46 +5,43 @@ namespace ECDH.Services
 {
     public static class SchoofAlgorithm
     {
-        private readonly static List<BigInteger> listOfAs = [];
-        private readonly static List<BigInteger> listOfNs = [];
+        private readonly static List<FiniteFieldElement> remainders = [];
 
         public static BigInteger Compute()
         {
-            BigInteger M = 1, l = 2, q = EllipticCurve.P;
+            BigInteger M = 1, l = 2, q = EllipticCurve.Prime;
             BigInteger sqrt16q = MathService.CeilSqrt(16 * q);
 
-            listOfAs.Clear(); listOfNs.Clear();
+            remainders.Clear();
 
             while (M < sqrt16q)
             {
                 if(l == 2)
                 {
-                    Polynomial.P = 2;
-                    var polynomial1 = new Polynomial([(q, 1), (1, -1)]);
-                    var polynomial2 = new Polynomial([(3, 1), (1, EllipticCurve.A), (0, EllipticCurve.B)]);
+                    Polynomial.Prime = 2;
+                    BigInteger prime = Polynomial.Prime;
 
-                    //var temp = ExtendedEuclideanAlgorithm.Compute(polynomial2, polynomial1).gcd;
+                    Polynomial polynomial1 = new([(q, new(1, prime)), (1, new(-1, prime))]);
+                    Polynomial polynomial2 = new([(3, new(1, prime)), (1, new(EllipticCurve.A, prime)), (0, new(EllipticCurve.B, prime))]);
 
                     if (ExtendedEuclideanAlgorithm.Compute(polynomial1, polynomial2).gcd.Degree < 1)
-                    {
-                        listOfAs.Add(1); listOfNs.Add(2);
-                    }
+                        remainders.Add(new(1, prime));
                     else
-                    {
-                        listOfAs.Add(0); listOfNs.Add(2);
-                    }
+                        remainders.Add(new(0, prime));
                 }
+                
                 else
                 {
-                    Point left, right;
+                    EllipticCurvePoint left, right;
                     var ql = q % l;
 
                     ql = ql <= (l / 2) ? ql : ql - l;
 
-                    EllipticCurve.P = l;
-                    var point = EllipticCurve.GeneratePoint(false);
-                    var pointq = new Point(BigInteger.ModPow(point.X, q, l), BigInteger.ModPow(point.Y, q, l));
-                    var pointq2 = new Point(BigInteger.ModPow(point.X, q * q, l), BigInteger.ModPow(point.Y, q * q, l));
+                    EllipticCurve.Prime = l;
+
+                    var point = EllipticCurve.GetRandomPoint(false);
+                    EllipticCurvePoint pointq = new(FiniteFieldElement.Pow(point.X, q), FiniteFieldElement.Pow(point.Y, q));
+                    EllipticCurvePoint pointq2 = new(FiniteFieldElement.Pow(point.X, q * q), FiniteFieldElement.Pow(point.Y, q * q));
 
                     for (int tau = 0; tau <= (l - 1) / 2; tau++)
                     {
@@ -53,12 +50,13 @@ namespace ECDH.Services
 
                         if (left == right)
                         {
-                            listOfAs.Add(tau); listOfNs.Add(l);
+                            remainders.Add(new(tau, l));
                             break;
                         }
+                        
                         else if (left == -right)
                         {
-                            listOfAs.Add(l - tau); listOfNs.Add(l);
+                            remainders.Add(new(-tau, l));
                             break;
                         }
                     }
@@ -68,8 +66,8 @@ namespace ECDH.Services
                 l = MillerRabinPrimalityTest.NextPrimeNumber(l);
             }
 
-            var t = ChineseRemainderTheorem.Compute(listOfAs, listOfNs);
-            EllipticCurve.P = q;
+            var t = ChineseRemainderTheorem.Compute(remainders).Value;
+            EllipticCurve.Prime = q;
 
             return q + 1 - t;
         }
