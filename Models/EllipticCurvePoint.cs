@@ -4,8 +4,10 @@ namespace ECDH.Models
 {
     public class EllipticCurvePoint
     {
-        public FiniteFieldElement X { get; set; }
-        public FiniteFieldElement Y { get; set; }
+        public FiniteFieldNumber X { get; set; }
+
+        public FiniteFieldNumber Y { get; set; }
+        
         public bool IsInfinite { get; }
 
         public bool IsOnCurve
@@ -15,7 +17,7 @@ namespace ECDH.Models
                 if (IsInfinite)
                     return true;
 
-                return FiniteFieldElement.Pow(Y, 2) == FiniteFieldElement.Pow(X, 3) + EllipticCurve.A * X + EllipticCurve.B;
+                return FiniteFieldNumber.Pow(Y, 2) == FiniteFieldNumber.Pow(X, 3) + EllipticCurve.A * X + EllipticCurve.B;
             }
         }
 
@@ -28,7 +30,7 @@ namespace ECDH.Models
             IsInfinite = true;
         }
 
-        public EllipticCurvePoint(FiniteFieldElement x, FiniteFieldElement y, bool isInfinite = false)
+        public EllipticCurvePoint(FiniteFieldNumber x, FiniteFieldNumber y, bool isInfinite = false)
         {
             if (x.Prime != y.Prime)
                 throw new ArgumentException("Primes must match");
@@ -64,15 +66,15 @@ namespace ECDH.Models
             if (P == -Q)
                 return Infinite;
 
-            FiniteFieldElement slope;
+            FiniteFieldNumber slope;
 
             if (P == Q)
-                slope = (3 * FiniteFieldElement.Pow(P.X, 2) + EllipticCurve.A) / (2 * P.Y);
+                slope = (3 * FiniteFieldNumber.Pow(P.X, 2) + EllipticCurve.A) / (2 * P.Y);
             else
                 slope = (Q.Y - P.Y) / (Q.X - P.X);
 
-            FiniteFieldElement x = FiniteFieldElement.Pow(slope, 2) - P.X - Q.X;
-            FiniteFieldElement y = slope * (P.X - x) - P.Y;
+            FiniteFieldNumber x = FiniteFieldNumber.Pow(slope, 2) - P.X - Q.X;
+            FiniteFieldNumber y = slope * (P.X - x) - P.Y;
 
             return new(x, y);
         }

@@ -5,7 +5,19 @@ namespace ECDH.Services
 {
     public static class MillerRabinPrimalityTest
     {
-        public static int PrecisionFactor { get; private set; } = 100;
+        public static int PrecisionFactor { get; } = 100;
+
+        public static BigInteger GetPrimeNumber(bool isLarge = true)
+        {
+            var rnd = new Random();
+            BigInteger number;
+
+            do
+                number = isLarge ? new BigInteger(RandomNumberGenerator.GetBytes(2), true) : rnd.Next(11, 500);
+            while (!IsPrimeNumber(number));
+
+            return number;
+        }
 
         public static BigInteger NextPrimeNumber(BigInteger number)
         {

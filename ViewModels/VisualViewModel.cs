@@ -242,7 +242,7 @@ namespace ECDH.ViewModels
         public ICommand GeneratePrimeCommand { get; }
         private void OnGeneratePrimeCommandExecuted(object? parameter)
         {
-            EllipticCurve.GeneratePrimeNumber(false);
+            EllipticCurve.Prime = MillerRabinPrimalityTest.GetPrimeNumber(false);
             PrimeNumber = EllipticCurve.Prime.ToString();
         }
 

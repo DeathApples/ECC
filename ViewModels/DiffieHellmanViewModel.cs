@@ -31,17 +31,15 @@ namespace ECDH.ViewModels
         public ICommand GetPointsNumberCommand { get; }
         private void OnGetPointsNumberCommandExecuted(object? parameter)
         {
-            PointsNumber = SchoofAlgorithm.Compute().ToString();
+            FormulaEllipticCurve = EllipticCurve.ToString();
+            PrimeNumber = EllipticCurve.Prime.ToString();
+            PointsNumber = SchoofAlgorithm.GetPointsCount().ToString();
         }
 
         public DiffieHellmanViewModel()
         {
-            Polynomial.Prime = 97;
-
-            EllipticCurve.A = 2;
-            EllipticCurve.B = 3;
-            EllipticCurve.Prime = 97; _primeNumber = "97";
-            _formulaEllipticCurve = EllipticCurve.ToString();
+            //_formulaEllipticCurve = EllipticCurve.ToString();
+            //_primeNumber = EllipticCurve.Prime.ToString();
 
             GetPointsNumberCommand = new RelayCommand(OnGetPointsNumberCommandExecuted);
         }
