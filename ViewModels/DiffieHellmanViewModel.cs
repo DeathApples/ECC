@@ -1,9 +1,9 @@
-﻿using ECDH.Models;
-using ECDH.Services;
-using ECDH.Commands;
+﻿using ECC.Models;
+using ECC.Services;
+using ECC.Commands;
 using System.Windows.Input;
 
-namespace ECDH.ViewModels
+namespace ECC.ViewModels
 {
     internal class DiffieHellmanViewModel : BaseViewModel
     {
@@ -38,9 +38,6 @@ namespace ECDH.ViewModels
 
         public DiffieHellmanViewModel()
         {
-            //_formulaEllipticCurve = EllipticCurve.ToString();
-            //_primeNumber = EllipticCurve.Prime.ToString();
-
             GetPointsNumberCommand = new RelayCommand(OnGetPointsNumberCommandExecuted);
         }
     }

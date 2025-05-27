@@ -1,9 +1,9 @@
-﻿using ECDH.Models;
+﻿using ECC.Models;
 using System.Numerics;
 
-namespace ECDH.Services
+namespace ECC.Services
 {
-    public static class SchoofAlgorithm
+    public class SchoofAlgorithm
     {
         public static BigInteger GetPointsCount()
         {
@@ -179,8 +179,6 @@ namespace ECDH.Services
                         }
                     }
                 }
-
-                Console.WriteLine($"l = {l}: {remaindersOfT[^1]}");
 
                 M *= l;
                 l = MillerRabinPrimalityTest.NextPrimeNumber(l);

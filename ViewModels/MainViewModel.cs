@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 
-using ECDH.Views;
-using ECDH.Models;
-using ECDH.Converters;
+using ECC.Views;
+using ECC.Models;
+using ECC.Converters;
 
-namespace ECDH.ViewModels
+namespace ECC.ViewModels
 {
     internal class MainViewModel : BaseViewModel
     {

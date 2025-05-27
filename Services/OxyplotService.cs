@@ -2,11 +2,11 @@
 using OxyPlot.Axes;
 using OxyPlot.Series;
 
-using ECDH.Models;
+using ECC.Models;
 
-namespace ECDH.Services
+namespace ECC.Services
 {
-    public static class OxyplotService
+    public class OxyplotService
     {
         public static PlotModel CreatePlotModel(bool isPointTable = false)
         {

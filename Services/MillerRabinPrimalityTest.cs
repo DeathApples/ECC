@@ -1,11 +1,11 @@
 ﻿using System.Numerics;
 using System.Security.Cryptography;
 
-namespace ECDH.Services
+namespace ECC.Services
 {
-    public static class MillerRabinPrimalityTest
+    public class MillerRabinPrimalityTest
     {
-        public static int PrecisionFactor { get; } = 100;
+        private static readonly int precisionFactor = 100;
 
         public static BigInteger GetPrimeNumber(bool isLarge = true)
         {
@@ -49,7 +49,7 @@ namespace ECDH.Services
                 s += 1;
             }
 
-            for (int i = 0; i < PrecisionFactor; i++)
+            for (int i = 0; i < precisionFactor; i++)
             {
                 BigInteger a;
 

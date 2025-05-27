@@ -1,13 +1,16 @@
 ﻿using System.Numerics;
 
-namespace ECDH.Models
+namespace ECC.Models
 {
     public class Polynomial
     {
+        #region Поля
         private static readonly Dictionary<(BigInteger, Polynomial), Polynomial> cacheModPsi = [];
 
         private static readonly Dictionary<BigInteger, Polynomial> cacheF = [];
+        #endregion
 
+        #region Свойства
         private static BigInteger A => Models.EllipticCurve.A;
 
         private static BigInteger B => Models.EllipticCurve.B;
@@ -25,7 +28,9 @@ namespace ECDH.Models
         public static Polynomial Y => new((1, 0, 1));
 
         public static Polynomial EllipticCurve => new((1, 3, 0), (A, 1, 0), (B, 0, 0));
+        #endregion
 
+        #region Конструкторы
         public Polynomial() { }
 
         public Polynomial(BigInteger a)
@@ -68,7 +73,9 @@ namespace ECDH.Models
                     Monomials[(xPower, yPower)] = coefficient;
             }
         }
+        #endregion
 
+        #region Индексаторы
         public FiniteFieldNumber this[(BigInteger xPower, BigInteger yPower) index]
         {
             get => Monomials.TryGetValue(index, out FiniteFieldNumber? value) ? value : new(0, Prime);
@@ -81,7 +88,9 @@ namespace ECDH.Models
                     Monomials[index] = value;
             }
         }
+        #endregion
 
+        #region Методы
         private static (Polynomial quotient, Polynomial remainder) Divide(Polynomial P, Polynomial Q)
         {
             var quotient = new Polynomial();
@@ -297,7 +306,9 @@ namespace ECDH.Models
 
             return cacheF[n];
         }
+        #endregion
 
+        #region Перегрузки операторов
         public static Polynomial operator +(Polynomial P, Polynomial Q)
         {
             var result = P.Copy();
@@ -323,9 +334,9 @@ namespace ECDH.Models
 
         public static Polynomial operator +(Polynomial P, FiniteFieldNumber a) => a.Value + P;
 
-        public static Polynomial operator -(Polynomial P, Polynomial Q) => P + (-Q);
+        public static Polynomial operator -(Polynomial P, Polynomial Q) => P + -Q;
 
-        public static Polynomial operator -(BigInteger a, Polynomial P) => a + (-P);
+        public static Polynomial operator -(BigInteger a, Polynomial P) => a + -P;
 
         public static Polynomial operator -(Polynomial P, BigInteger a) => -a + P;
 
@@ -385,7 +396,9 @@ namespace ECDH.Models
         public static bool operator ==(Polynomial P, Polynomial Q) => P.Equals(Q);
 
         public static bool operator !=(Polynomial P, Polynomial Q) => !P.Equals(Q);
+        #endregion
 
+        #region Перегрузки методов
         public override bool Equals(object? obj)
         {
             ArgumentNullException.ThrowIfNull(obj, nameof(obj));
@@ -423,5 +436,6 @@ namespace ECDH.Models
 
             return polynomial;
         }
+        #endregion
     }
 }

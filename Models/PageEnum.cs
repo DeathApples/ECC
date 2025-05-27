@@ -1,5 +1,4 @@
-﻿namespace ECDH.Models
-
+﻿namespace ECC.Models
 {
     enum PageEnum
     {

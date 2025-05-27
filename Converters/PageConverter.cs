@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-using ECDH.Models;
+using ECC.Models;
 
-namespace ECDH.Converters
+namespace ECC.Converters
 {
     internal class PageConverter : IValueConverter
     {

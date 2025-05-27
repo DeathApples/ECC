@@ -1,12 +1,12 @@
 ﻿using OxyPlot;
 using System.Windows.Input;
 
-using ECDH.Models;
-using ECDH.Commands;
-using ECDH.Services;
+using ECC.Models;
+using ECC.Commands;
+using ECC.Services;
 using System.Numerics;
 
-namespace ECDH.ViewModels
+namespace ECC.ViewModels
 {
     internal class VisualViewModel : BaseViewModel
     {

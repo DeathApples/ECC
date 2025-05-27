@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ECDH.Commands
+namespace ECC.Commands
 {
     internal class RelayCommand : ICommand
     {

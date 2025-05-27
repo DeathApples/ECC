@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace ECDH;
+namespace ECC;
 
 /// <summary>
 /// Interaction logic for App.xaml

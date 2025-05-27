@@ -1,13 +1,13 @@
 ﻿using System.Numerics;
 
-namespace ECDH.Models
+namespace ECC.Models
 {
     public class EllipticCurvePoint
     {
-        public FiniteFieldNumber X { get; set; }
+        public FiniteFieldNumber X { get; }
 
-        public FiniteFieldNumber Y { get; set; }
-        
+        public FiniteFieldNumber Y { get; }
+
         public bool IsInfinite { get; }
 
         public bool IsOnCurve
@@ -38,9 +38,6 @@ namespace ECDH.Models
             X = x;
             Y = y;
             IsInfinite = isInfinite;
-
-            //if (!IsOnCurve)
-            //    throw new ArgumentException("Point not on curve");
         }
 
         public EllipticCurvePoint(BigInteger x, BigInteger y, bool isInfinite = false)
@@ -48,9 +45,6 @@ namespace ECDH.Models
             X = new(x, EllipticCurve.Prime);
             Y = new(y, EllipticCurve.Prime);
             IsInfinite = isInfinite;
-
-            //if (!IsOnCurve)
-            //    throw new ArgumentException("Point not on curve");
         }
 
         public EllipticCurvePoint Copy() => new(X, Y, IsInfinite);
@@ -103,7 +97,7 @@ namespace ECDH.Models
 
         public static EllipticCurvePoint operator -(EllipticCurvePoint P) => new(P.X, -P.Y, P.IsInfinite);
 
-        public static EllipticCurvePoint operator -(EllipticCurvePoint P, EllipticCurvePoint Q) => P + (-Q);
+        public static EllipticCurvePoint operator -(EllipticCurvePoint P, EllipticCurvePoint Q) => P + -Q;
 
         public static bool operator ==(EllipticCurvePoint P, EllipticCurvePoint Q) => P.Equals(Q);
 

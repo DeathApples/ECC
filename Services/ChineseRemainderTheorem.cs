@@ -1,9 +1,9 @@
-﻿using ECDH.Models;
+﻿using ECC.Models;
 using System.Numerics;
 
-namespace ECDH.Services
+namespace ECC.Services
 {
-    public static class ChineseRemainderTheorem
+    public class ChineseRemainderTheorem
     {
         public static FiniteFieldNumber GetNumber(List<FiniteFieldNumber> remainders)
         {

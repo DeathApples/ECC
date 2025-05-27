@@ -1,19 +1,24 @@
 ﻿using System.Numerics;
 
-namespace ECDH.Models
+namespace ECC.Models
 {
     public class FiniteFieldNumber
     {
+        #region Свойства
         public BigInteger Value { get; }
-        
-        public BigInteger Prime { get; }
 
+        public BigInteger Prime { get; }
+        #endregion
+
+        #region Конструкторы
         public FiniteFieldNumber(BigInteger value, BigInteger prime)
         {
             Prime = prime;
             Value = Mod(value);
         }
+        #endregion
 
+        #region Методы
         private BigInteger Mod(BigInteger value)
         {
             value %= Prime;
@@ -40,7 +45,7 @@ namespace ECDH.Models
 
         public FiniteFieldNumber Inverse()
         {
-            var gcd = ExtendedEuclideanAlgoritm(Value, Prime, out BigInteger x, out BigInteger _);
+            var gcd = ExtendedEuclideanAlgoritm(Value, Prime, out BigInteger x, out _);
 
             if (gcd != 1)
                 throw new InvalidOperationException("Element not invertible");
@@ -67,7 +72,9 @@ namespace ECDH.Models
 
             return sign < 0 ? result.Inverse() : result;
         }
+        #endregion
 
+        #region Перегрузки операторов
         public static FiniteFieldNumber operator +(FiniteFieldNumber a, FiniteFieldNumber b)
         {
             if (a.Prime != b.Prime)
@@ -121,7 +128,9 @@ namespace ECDH.Models
         public static bool operator ==(FiniteFieldNumber a, FiniteFieldNumber b) => a.Equals(b);
 
         public static bool operator !=(FiniteFieldNumber a, FiniteFieldNumber b) => !a.Equals(b);
+        #endregion
 
+        #region Перегрузки методов
         public override bool Equals(object? obj)
         {
             ArgumentNullException.ThrowIfNull(obj, nameof(obj));
@@ -136,5 +145,6 @@ namespace ECDH.Models
         public override int GetHashCode() => HashCode.Combine(Value, Prime);
 
         public override string? ToString() => $"{Value} (mod {Prime})";
+        #endregion
     }
 }

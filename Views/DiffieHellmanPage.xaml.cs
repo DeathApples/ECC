@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ECDH.Views
+namespace ECC.Views
 {
     /// <summary>
     /// Логика взаимодействия для DiffieHellmanPage.xaml

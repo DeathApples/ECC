@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECDH", "ECDH.csproj", "{0CD50F77-98FA-47E9-8017-0629A3C63D83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECC", "ECC.csproj", "{0CD50F77-98FA-47E9-8017-0629A3C63D83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

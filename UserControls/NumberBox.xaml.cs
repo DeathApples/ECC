@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace ECDH.UserControls
+namespace ECC.UserControls
 {
     /// <summary>
     /// Логика взаимодействия для NumberBox.xaml

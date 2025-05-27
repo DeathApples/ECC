@@ -1,17 +1,17 @@
-﻿using ECDH.Services;
+﻿using ECC.Services;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace ECDH.Models
+namespace ECC.Models
 {
     public class EllipticCurve
     {
         public static BigInteger A { get; set; } = 2;
 
         public static BigInteger B { get; set; } = 3;
-        
+
         public static BigInteger Prime { get; set; } = 97;
-        
+
         public static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
 
         private static BigInteger GetLargeRandomNumber(bool isUnsigned) => new(RandomNumberGenerator.GetBytes(new Random().Next(32)), isUnsigned);
@@ -41,6 +41,68 @@ namespace ECDH.Models
             while (!point.IsOnCurve);
 
             return point;
+        }
+
+        public static EllipticCurvePoint GetBasePoint(BigInteger groupOrder, out BigInteger subgroupOrder)
+        {
+            subgroupOrder = 0;
+            var divisors = new List<BigInteger>();
+
+            for (BigInteger i = 1; i * i <= groupOrder; i++)
+            {
+                if (groupOrder % i == 0)
+                {
+                    if (i * i == groupOrder)
+                        divisors.Add(i);
+
+                    else
+                        divisors.AddRange(i, groupOrder / i);
+                }
+            }
+
+            divisors.Sort();
+            var point = EllipticCurvePoint.Infinite;
+            var x = BigInteger.Zero;
+
+            while (subgroupOrder < groupOrder / 3)
+            {
+                do
+                {
+                    point = GetPointByX(x);
+                    x++;
+                }
+                while (point.IsInfinite && x < Prime);
+
+                if (x == Prime)
+                    throw new Exception("There is no base point");
+
+                foreach (var divisor in divisors)
+                {
+                    if ((divisor * point).IsInfinite)
+                    {
+                        if (MillerRabinPrimalityTest.IsPrimeNumber(divisor))
+                            subgroupOrder = divisor;
+
+                        break;
+                    }
+                }
+            }
+
+            return point;
+        }
+
+        public static EllipticCurvePoint GetPointByX(BigInteger x)
+        {
+            var xFF = new FiniteFieldNumber(x, Prime);
+            var xPart = FiniteFieldNumber.Pow(xFF, 3) + A * xFF + B;
+
+            if (LegendreSymbol.Compute(xPart.Value, Prime) == 1)
+            {
+                var y = TonelliShanksAlgorithm.GetSquareRoot(xPart.Value, Prime);
+                return new(x, y);
+            }
+
+            return EllipticCurvePoint.Infinite;
         }
 
         public static new string? ToString()
