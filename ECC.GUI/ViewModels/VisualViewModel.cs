@@ -351,7 +351,7 @@ namespace ECC.GUI.ViewModels
                 PointTy = _pointT.IsInfinite ? "∞" : _pointT.Y.ToString();
 
                 _pointS.CalculateOrder();
-                OrderPointS = $"Порядок подгруппы, генерируемой точкой P равен {_pointS.Order}";
+                OrderPointS = $"Порядок подгруппы, генерируемой точкой P, равен {_pointS.Order}";
             }
         }
 

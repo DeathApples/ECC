@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 using ECC.Core;
+using System.Numerics;
 
 namespace ECC.GUI.Services
 {
@@ -140,20 +141,24 @@ namespace ECC.GUI.Services
                 MarkerSize = 3
             };
 
-            int a = (int)ECurve.A, b = (int)ECurve.B, p = (int)ECurve.Prime;
-            var leftSide = new List<int>(); var rightSide = new List<int>();
-            for (int i = 0; i < p; i++)
-            {
-                leftSide.Add((i * i % p + p) % p);
-                rightSide.Add(((i * i * i + a * i + b) % p + p) % p);
-            }
+            BigInteger a = ECurve.A, b = ECurve.B, p = ECurve.Prime;
 
-            for (int i = 0; i < p; i++)
+            for (BigInteger y = 0; y < p; y++)
             {
-                for (int k = 0; k < p; k++)
+                var leftSide = y * y % p;
+
+                if (leftSide < 0)
+                    leftSide += p;
+
+                for (BigInteger x = 0; x < p; x++)
                 {
-                    if (leftSide[i] == rightSide[k])
-                        scatterSeries.Points.Add(new ScatterPoint(k, i));
+                    var rightSide = (x * x * x + a * x + b) % p;
+
+                    if (rightSide < 0)
+                        rightSide += p;
+
+                    if (leftSide == rightSide)
+                        scatterSeries.Points.Add(new ScatterPoint((int)x, (int)y));
                 }
             }
 

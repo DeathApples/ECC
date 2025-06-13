@@ -11,12 +11,12 @@ namespace ECC.Core.Algorithms
 
             var p = EllipticCurve.Prime;
             var E = Polynomial.EllipticCurve;
-            var sqrt16q = CeilSqrt(16 * p);
+            var sqrt16p = CeilSqrt(16 * p);
 
             BigInteger M = 1, l = 2;
             List<FiniteFieldNumber> remaindersOfT = [];
 
-            while (M < sqrt16q)
+            while (M < sqrt16p)
             {
                 if (l == 2)
                 {
