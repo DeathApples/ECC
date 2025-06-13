@@ -18,7 +18,7 @@ namespace ECC.GUI.ViewModels
             get => _parameterA;
             set
             {
-                if (BigInteger.TryParse(value, out var a) && ECurve.A != a)
+                if (BigInteger.TryParse(value, out var a) && a > -17 && a < 17 && ECurve.A != a)
                     ECurve.A = a;
 
                 SetProperty(ref _parameterA, value);
@@ -31,7 +31,7 @@ namespace ECC.GUI.ViewModels
             get => _parameterB;
             set
             {
-                if (BigInteger.TryParse(value, out var b) && ECurve.B != b)
+                if (BigInteger.TryParse(value, out var b) && b > -17 && b < 17 && ECurve.B != b)
                     ECurve.B = b;
 
                 SetProperty(ref _parameterB, value);
@@ -44,7 +44,7 @@ namespace ECC.GUI.ViewModels
             get => _primeNumber;
             set
             {
-                if (BigInteger.TryParse(value, out var p) && ECurve.Prime != p)
+                if (BigInteger.TryParse(value, out var p) && p > 6 && p < 998 && ECurve.Prime != p)
                     ECurve.Prime = p;
 
                 SetProperty(ref _primeNumber, value);
