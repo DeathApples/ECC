@@ -10,7 +10,8 @@ namespace ECC.GUI.ViewModels
     {
         private readonly Page[] _pages = [
             new VisualPage(),
-            new DiffieHellmanPage()
+            new DiffieHellmanPage(),
+            new DigitalSignaturePage()
         ];
 
         private PageEnum? _currentPageEnum;

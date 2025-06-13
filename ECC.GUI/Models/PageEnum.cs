@@ -3,6 +3,7 @@
     enum PageEnum
     {
         VisualPage,
-        DiffieHellmanPage
+        DiffieHellmanPage,
+        DigitalSignaturePage
     }
 }

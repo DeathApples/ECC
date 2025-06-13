@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-
     <Style x:Key="MainBorder" TargetType="Border">
         <Style.Setters>
             <Setter Property="CornerRadius" Value="12" />
@@ -21,7 +20,7 @@
             <Setter Property="FontSize" Value="47" />
         </Style.Setters>
     </Style>
-
-
-
+    
+    
+    
 </ResourceDictionary>

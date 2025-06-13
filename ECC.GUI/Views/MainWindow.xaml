@@ -47,13 +47,17 @@
             <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource TabsBorder}">
                 <StackPanel>
                     <RadioButton Style="{StaticResource TabRadioButton}" Content="Visual"
-                         IsChecked="{Binding CurrentPageEnum, 
-                         Converter={StaticResource PageConverter}, 
-                         ConverterParameter=0}" />
+                        IsChecked="{Binding CurrentPageEnum, 
+                        Converter={StaticResource PageConverter}, 
+                        ConverterParameter=0}" />
                     <RadioButton Style="{StaticResource TabRadioButton}" Content="ECDH"
-                         IsChecked="{Binding CurrentPageEnum, 
-                         Converter={StaticResource PageConverter}, 
-                         ConverterParameter=1}" />
+                        IsChecked="{Binding CurrentPageEnum, 
+                        Converter={StaticResource PageConverter}, 
+                        ConverterParameter=1}" />
+                    <RadioButton Style="{StaticResource TabRadioButton}" Content="ECDSA"
+                        IsChecked="{Binding CurrentPageEnum, 
+                        Converter={StaticResource PageConverter}, 
+                        ConverterParameter=2}" />
                 </StackPanel>
             </Border>
 
