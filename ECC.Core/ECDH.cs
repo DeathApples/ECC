@@ -17,8 +17,8 @@ namespace ECC.Core
             int delayA = 0, delayB = 0;
             if(delay != 0)
             {
-                delayA = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2) + delay;
-                delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2) + delay;
+                delayA = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
+                delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
             }
 
             Task<ECPoint> anna = Task.Run(() =>
@@ -72,7 +72,7 @@ namespace ECC.Core
 
                 AnnaSignal.WaitOne();
                 var P = AnnaPoint;
-                StepsQueue.Enqueue(("Борис", $"Получает от Бориса точку P"));
+                StepsQueue.Enqueue(("Борис", $"Получает от Анны точку P"));
 
                 Thread.Sleep(delayB);
 

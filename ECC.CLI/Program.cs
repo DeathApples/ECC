@@ -13,8 +13,8 @@
                 Console.Clear();
 
                 Console.WriteLine("Действия, доступные для выбора:");
-                Console.WriteLine("\t1. Подбор \"правильной\" эллиптической кривой");
-                Console.WriteLine("\t2. Выход");
+                Console.WriteLine(" 1. Подбор \"правильной\" эллиптической кривой");
+                Console.WriteLine(" 2. Выход");
 
                 do
                     Console.Write("\nВыберите действие (укажите номер от 1 до 2): ");
@@ -23,6 +23,9 @@
                 switch (choice1)
                 {
                     case 1:
+                        Console.Clear();
+                        Console.WriteLine("Производится генерация параметров эллиптической кривой");
+                        Console.WriteLine("Данная операция может выполняться продолжительное время!");
                         EllipticCurve.Prepare();
                         Console.Clear();
                         ConsoleVisualizer.PrintParameters();
@@ -45,10 +48,10 @@
                     Console.Clear();
 
                     Console.WriteLine("Действия, доступные для выбора:");
-                    Console.WriteLine("\t1. Алгоритм Диффи-Хеллмана на эллиптической кривой");
-                    Console.WriteLine("\t2. Электронная цифровая подпись на эллиптической кривой");
-                    Console.WriteLine("\t3. Задать задержку между выполнением шагов");
-                    Console.WriteLine("\t4. Назад");
+                    Console.WriteLine(" 1. Алгоритм Диффи-Хеллмана на эллиптической кривой");
+                    Console.WriteLine(" 2. Электронная цифровая подпись на эллиптической кривой");
+                    Console.WriteLine(" 3. Задать задержку между выполнением шагов");
+                    Console.WriteLine(" 4. Назад");
 
                     do
                         Console.Write("\nВыберите действие (укажите номер от 1 до 4): ");
@@ -64,8 +67,9 @@
                             break;
 
                         case 2:
-                            Console.Write("\nВведите сообщение для подписания [Hello World]: ");
-                            var message = Console.ReadLine() ?? "Hello World";
+                            var defaultMessage = "Hello World";
+                            Console.Write($"\nВведите сообщение для подписания [{defaultMessage}]: ");
+                            var message = Console.ReadLine() ?? defaultMessage;
                             
                             Console.Clear();
                             DigitalSignature.Execute(message, delay);
@@ -75,7 +79,7 @@
 
                         case 3:
                             do
-                                Console.Write("\nУкажите задержку (в миллисекундах) между выполнением шагов в алгоритме: ");
+                                Console.Write("\nУкажите задержку между выполнением шагов (в миллисекундах): ");
                             while (!int.TryParse(Console.ReadLine(), out delay) || delay < 0);
                             break;
 

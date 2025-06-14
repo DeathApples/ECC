@@ -17,8 +17,8 @@ namespace ECC.Core
             int delayA = 0, delayB = 0;
             if (delay != 0)
             {
-                delayA = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2) + delay;
-                delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2) + delay;
+                delayA = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
+                delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
             }
 
             Task anna = Task.Run(() =>
