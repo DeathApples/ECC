@@ -6,6 +6,8 @@ namespace ECC.Core
 {
     public static class ECurve
     {
+        public static event Action? EllipticCurveChanged;
+
         public static BigInteger A
         {
             get => EllipticCurve.A;
@@ -26,8 +28,6 @@ namespace ECC.Core
 
         public static BigInteger Order => EllipticCurve.Order;
         public static BigInteger Discriminant => EllipticCurve.Discriminant;
-
-        public static event Action? EllipticCurveChanged; 
 
         public static bool GenerateEllipticCurve(BigInteger a, BigInteger b, BigInteger p)
         {
