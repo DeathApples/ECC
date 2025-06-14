@@ -20,11 +20,11 @@ namespace ECC.CLI
 
             writer.Wait();
 
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             ConsoleVisualizer.PrintParameters();
 
             var result = isVerified ? "Подпись верна" : "Подпись не верна";
-            ConsoleVisualizer.DrawTable("Выполнение ECDH", result, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
+            ConsoleVisualizer.DrawTable("Выполнение ECDSA", result, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
         }
 
         private static void WriteSteps()
@@ -65,7 +65,7 @@ namespace ECC.CLI
                         BorisStepsCount++;
                     }
 
-                    Console.Clear();
+                    Console.SetCursorPosition(0, 0);
 
                     ConsoleVisualizer.PrintParameters();
                     ConsoleVisualizer.DrawTable("Выполнение ECDSA", null, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);

@@ -20,7 +20,7 @@ namespace ECC.CLI
 
             writer.Wait();
 
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             ConsoleVisualizer.PrintParameters();
 
             var result = Ka == Kb ? $"Анна и Борис получили общую секретную точку K = {Ka}" : "Анна и Борис не смогли получить общую секретную точку";
@@ -65,7 +65,7 @@ namespace ECC.CLI
                         BorisStepsCount++;
                     }
 
-                    Console.Clear();
+                    Console.SetCursorPosition(0, 0);
 
                     ConsoleVisualizer.PrintParameters();
                     ConsoleVisualizer.DrawTable("Выполнение ECDH", null, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
