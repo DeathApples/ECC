@@ -16,7 +16,7 @@ namespace ECC.CLI
                 a = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
                 b = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
                 p = Core.Algorithms.MillerRabinPrimalityTest.GetPrimeNumber();
-            } while (!ECurve.GenerateEllipticCurve(a, b, p) || !ECurve.TryGetBasePoint(out G));
+            } while (!ECurve.TryGenerateEllipticCurve(a, b, p) || !ECurve.TryGetBasePoint(out G) || ECurve.Prime == ECurve.Order);
         }
     }
 }
