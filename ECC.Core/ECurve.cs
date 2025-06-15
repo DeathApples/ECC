@@ -27,8 +27,9 @@ namespace ECC.Core
         }
 
         public static BigInteger Order => EllipticCurve.Order;
-
         public static BigInteger Discriminant => EllipticCurve.Discriminant;
+
+        public static List<ECPoint> Points { get; private set; } = [];
 
         public static bool TryGenerateEllipticCurve(BigInteger a, BigInteger b, BigInteger p)
         {
@@ -50,7 +51,7 @@ namespace ECC.Core
             return true;
         }
 
-        public static List<ECPoint> GetPoints()
+        public static void CalculatePoints()
         {
             var points = new List<ECPoint>();
 
@@ -68,7 +69,7 @@ namespace ECC.Core
                 }
             }
 
-            return points;
+            Points = points;
         }
 
         public static bool TryGetBasePoint(out ECPoint G)

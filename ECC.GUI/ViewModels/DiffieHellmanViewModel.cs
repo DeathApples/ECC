@@ -160,7 +160,7 @@ namespace ECC.GUI.ViewModels
             {
                 a = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
                 b = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
-            } while (!ECurve.GenerateEllipticCurve(a, b, ECurve.Prime) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
+            } while (!ECurve.TryGenerateEllipticCurve(a, b, ECurve.Prime) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
 
             ParameterA = ECurve.A.ToString();
             ParameterB = ECurve.B.ToString();
@@ -174,7 +174,7 @@ namespace ECC.GUI.ViewModels
             do
             {
                 p = MillerRabinPrimalityTest.GetPrimeNumber();
-            } while (!ECurve.GenerateEllipticCurve(ECurve.A, ECurve.B, p) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
+            } while (!ECurve.TryGenerateEllipticCurve(ECurve.A, ECurve.B, p) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
 
             PrimeNumber = ECurve.Prime.ToString();
         }
@@ -205,7 +205,7 @@ namespace ECC.GUI.ViewModels
             PrimeNumber = ECurve.Prime.ToString();
             FormulaEllipticCurve = $"y² = x³{ECurve.Formula}";
             SchoofOrderEllipticCurve = $"Порядок кривой (алгоритм Шуфа): {ECurve.Order}";
-            FullEnumerationOrderEllipticCurve = $"Порядок кривой (полный перебор): ???";
+            FullEnumerationOrderEllipticCurve = $"Порядок кривой (полный перебор): {ECurve.Points.Count + 1}";
 
             GenerateBasePoint();
             ResultProtocol = string.Empty;
@@ -265,20 +265,6 @@ namespace ECC.GUI.ViewModels
 
             ECurve.EllipticCurveChanged += EllipticCurveChangedHandle;
             EllipticCurveChangedHandle();
-
-            //AnnaSteps.Add("Выбирает число n: 194");
-            //AnnaSteps.Add("Вычисляет точку P = n * G: (198, 389)");
-            //AnnaSteps.Add("Отправляет Борису точку P");
-            //AnnaSteps.Add("Получает от Бориса точку Q");
-            //AnnaSteps.Add("Вычисляет секретную точку K = n * Q: (156, 270)");
-
-            //BorisSteps.Add("Выбирает число m: 61");
-            //BorisSteps.Add("Вычисляет точку Q = m * G: (62, 8)");
-            //BorisSteps.Add("Отправляет Анне точку Q");
-            //BorisSteps.Add("Получает от Бориса точку P");
-            //BorisSteps.Add("Вычисляет секретную точку K = m * P: (156, 270)");
-
-            //ResultProtocol = "Анна и Борис получили общую секретную точку K = (156, 270)";
         }
     }
 }

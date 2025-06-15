@@ -132,7 +132,8 @@ namespace ECC.GUI.Services
         {
             tablePlotModel.Series.Clear();
 
-            var points = ECurve.GetPoints().ConvertAll(point => new ScatterPoint((int)point.X, (int)point.Y));
+            ECurve.CalculatePoints();
+            var points = ECurve.Points.ConvertAll(point => new ScatterPoint((int)point.X, (int)point.Y));
 
             var scatterSeries = new ScatterSeries
             {
@@ -143,7 +144,6 @@ namespace ECC.GUI.Services
             };
 
             scatterSeries.Points.AddRange(points);
-
             tablePlotModel.Series.Add(scatterSeries);
         }
     }
