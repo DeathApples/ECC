@@ -16,15 +16,9 @@ namespace ECC.CLI
             BorisSteps = []; BorisStepsCount = 0;
 
             Task writer = Task.Run(WriteSteps);
-            var (Ka, Kb) = ECDH.Execute(EllipticCurve.G, delay);
+            ECDH.Execute(EllipticCurve.G, delay);
 
             writer.Wait();
-
-            Console.SetCursorPosition(0, 0);
-            ConsoleVisualizer.PrintParameters();
-
-            var result = Ka == Kb ? $"Анна и Борис получили общую секретную точку K = {Ka}" : "Анна и Борис не смогли получить общую секретную точку";
-            ConsoleVisualizer.DrawTable("Выполнение ECDH", result, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
         }
 
         private static void WriteSteps()
@@ -34,7 +28,13 @@ namespace ECC.CLI
                 if (ECDH.StepsQueue.TryDequeue(out (string owner, string action) step))
                 {
                     if (step.owner == string.Empty)
+                    {
+                        Console.SetCursorPosition(0, 0);
+                        ConsoleVisualizer.PrintParameters();
+                        ConsoleVisualizer.DrawTable("Выполнение ECDH", step.action, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
+
                         break;
+                    }
 
                     if (step.owner == "Анна")
                     {

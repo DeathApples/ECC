@@ -27,8 +27,8 @@
 
     <Style x:Key="CaptionBorder" TargetType="Border" BasedOn="{StaticResource CurveBorder}">
         <Style.Setters>
-            <Setter Property="Margin" Value="40, 8" />
-            <Setter Property="CornerRadius" Value="0, 12, 12, 0" />
+            <Setter Property="Margin" Value="0, 8, 0, 0" />
+            <Setter Property="CornerRadius" Value="0, 8, 8, 0" />
             <Setter Property="Background" Value="#292929" />
         </Style.Setters>
     </Style>
@@ -56,7 +56,7 @@
     <Style x:Key="OrderTextBlock" TargetType="TextBlock" BasedOn="{StaticResource TitleTextBlock}">
         <Style.Setters>
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="0, 8" />
+            <Setter Property="Margin" Value="12, 8" />
             <Setter Property="FontSize" Value="18" />
         </Style.Setters>
     </Style>

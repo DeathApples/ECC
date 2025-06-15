@@ -72,7 +72,7 @@ namespace ECC.GUI.ViewModels
             set => SetProperty(ref _fullEnumerationOrderEllipticCurve, value);
         }
 
-        private readonly ECPoint _pointP;
+        private readonly ECPoint _pointP = new(15, 70);
 
         private string? _pointPx;
         public string? PointPx
@@ -106,7 +106,7 @@ namespace ECC.GUI.ViewModels
             }
         }
 
-        private readonly ECPoint _pointQ;
+        private readonly ECPoint _pointQ = new(17, 56);
 
         private string? _pointQx;
         public string? PointQx
@@ -141,7 +141,7 @@ namespace ECC.GUI.ViewModels
             }
         }
 
-        private ECPoint _pointR;
+        private ECPoint? _pointR;
 
         private string? _pointRx;
         public string? PointRx
@@ -157,9 +157,9 @@ namespace ECC.GUI.ViewModels
             set => SetProperty(ref _pointRy, value);
         }
 
-        private int _n;
+        private int _n = 2;
 
-        private string? _multiplier;
+        private string? _multiplier = "2";
         public string? Multiplier
         {
             get => _multiplier;
@@ -175,7 +175,7 @@ namespace ECC.GUI.ViewModels
             }
         }
 
-        private readonly ECPoint _pointS;
+        private readonly ECPoint _pointS = new(3, 11);
 
         private string? _pointSx;
         public string? PointSx
@@ -216,7 +216,7 @@ namespace ECC.GUI.ViewModels
             set => SetProperty(ref _orderPointS, value);
         }
 
-        private ECPoint _pointT;
+        private ECPoint? _pointT;
 
         private string? _pointTx;
         public string? PointTx
@@ -232,15 +232,15 @@ namespace ECC.GUI.ViewModels
             set => SetProperty(ref _pointTy, value);
         }
 
-        private PlotModel _curvePlotModel;
-        public PlotModel CurvePlotModel
+        private PlotModel? _curvePlotModel;
+        public PlotModel? CurvePlotModel
         {
             get => _curvePlotModel;
             set => SetProperty(ref _curvePlotModel, value);
         }
 
-        private PlotModel _tablePlotModel;
-        public PlotModel TablePlotModel
+        private PlotModel? _tablePlotModel;
+        public PlotModel? TablePlotModel
         {
             get => _tablePlotModel;
             set => SetProperty(ref _tablePlotModel, value);
@@ -288,7 +288,12 @@ namespace ECC.GUI.ViewModels
             var tablePlotModel = OxyplotService.CreatePlotModel(true);
             OxyplotService.DrawPointTable(tablePlotModel);
 
-            CurvePlotModel = curvePlotModel; TablePlotModel = tablePlotModel;
+            CurvePlotModel = curvePlotModel;
+            TablePlotModel = tablePlotModel;
+
+            ParameterA = ECurve.A.ToString();
+            ParameterB = ECurve.B.ToString();
+            PrimeNumber = ECurve.Prime.ToString();
             FormulaEllipticCurve = $"y² = x³{ECurve.Formula}";
             SchoofOrderEllipticCurve = $"Порядок кривой (алгоритм Шуфа): {ECurve.Order}";
 
@@ -363,36 +368,41 @@ namespace ECC.GUI.ViewModels
             GenerateMultiplierCommand = new RelayCommand(OnGenerateMultiplierCommandExecuted);
 
             ECurve.EllipticCurveChanged += EllipticCurveChangedHandle;
+            EllipticCurveChangedHandle();
 
-            _parameterA = ECurve.A.ToString();
-            _parameterB = ECurve.B.ToString();
-            _primeNumber = ECurve.Prime.ToString();
-            _formulaEllipticCurve = $"y² = x³{ECurve.Formula}";
-            _schoofOrderEllipticCurve = $"Порядок кривой (алгоритм Шуфа): {ECurve.Order}";
+            //EllipticCurveChangedHandle();
 
-            _curvePlotModel = OxyplotService.CreatePlotModel();
-            _tablePlotModel = OxyplotService.CreatePlotModel(true);
+            //_parameterA = ECurve.A.ToString();
+            //_parameterB = ECurve.B.ToString();
+            //_primeNumber = ECurve.Prime.ToString();
+            //_formulaEllipticCurve = $"y² = x³{ECurve.Formula}";
+            //_schoofOrderEllipticCurve = $"Порядок кривой (алгоритм Шуфа): {ECurve.Order}";
 
-            OxyplotService.DrawPointTable(TablePlotModel);
-            OxyplotService.DrawEllipticCurve(CurvePlotModel);
+            //_curvePlotModel = OxyplotService.CreatePlotModel();
+            //_tablePlotModel = OxyplotService.CreatePlotModel(true);
 
-            var series = (ScatterSeries)TablePlotModel.Series.First();
-            _fullEnumerationOrderEllipticCurve = $"Порядок кривой (полный перебор): {series.Points.Count + 1}";
+            //OxyplotService.DrawPointTable(TablePlotModel);
+            //OxyplotService.DrawEllipticCurve(CurvePlotModel);
 
-            _pointQ = new(95, 31); _pointP = new(17, 10);
-            _pointPx = _pointP.X.ToString(); _pointPy = _pointP.Y.ToString();
-            _pointQx = _pointQ.X.ToString(); _pointQy = _pointQ.Y.ToString();
+            //var series = (ScatterSeries)TablePlotModel.Series.First();
+            //_fullEnumerationOrderEllipticCurve = $"Порядок кривой (полный перебор): {series.Points.Count + 1}";
 
-            _pointR = _pointP + _pointQ;
-            _pointRx = _pointR.X.ToString(); _pointRy = _pointR.Y.ToString();
+            //_pointQ = new(95, 31); _pointP = new(17, 10);
+            //_pointPx = _pointP.X.ToString(); _pointPy = _pointP.Y.ToString();
+            //_pointQx = _pointQ.X.ToString(); _pointQy = _pointQ.Y.ToString();
 
-            _n = 2;  _pointS = new(3, 6);
-            _multiplier = _n.ToString();
-            _pointSx = _pointS.X.ToString(); _pointSy = _pointS.Y.ToString();
-            _orderPointS = $"Порядок подгруппы, генерируемой точкой P равен 5";
+            //_pointR = _pointP + _pointQ;
+            //_pointRx = _pointR.X.ToString(); _pointRy = _pointR.Y.ToString();
 
-            _pointT = _n * _pointS;
-            _pointTx = _pointT.X.ToString(); _pointTy = _pointT.Y.ToString();
+            //_n = 2;  _pointS = new(3, 6);
+            //_multiplier = _n.ToString();
+            //_pointSx = _pointS.X.ToString(); _pointSy = _pointS.Y.ToString();
+            //_orderPointS = $"Порядок подгруппы, генерируемой точкой P равен 5";
+
+            //_pointT = _n * _pointS;
+            //_pointTx = _pointT.X.ToString(); _pointTy = _pointT.Y.ToString();
+
+            //EllipticCurveChangedHandle();
         }
     }
 }

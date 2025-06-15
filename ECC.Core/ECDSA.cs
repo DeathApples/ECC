@@ -12,7 +12,7 @@ namespace ECC.Core
         private static (BigInteger, BigInteger) Signature;
         private static ECPoint PublicKey = null!;
 
-        public static bool Execute(string message, ECPoint G, int delay = 0)
+        public static async void Execute(string message, ECPoint G, int delay = 0)
         {
             int delayA = 0, delayB = 0;
 
@@ -22,74 +22,74 @@ namespace ECC.Core
                 delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
             }
 
-            Task anna = Task.Run(() =>
+            Task anna = Task.Run(async () =>
             {
+                await Task.Delay(delayA);
+
                 var privateKey = System.Security.Cryptography.RandomNumberGenerator.GetInt32(1, (int)G.Order);
                 StepsQueue.Enqueue(("Анна", $"Выбирает закрытый ключ: {privateKey}"));
 
-                Thread.Sleep(delayA);
+                await Task.Delay(delayA);
 
                 var publicKey = privateKey * G;
                 StepsQueue.Enqueue(("Анна", $"Вычисляет открытый ключ и публикует его: {publicKey}"));
                 PublicKey = publicKey;
 
-                Thread.Sleep(delayA);
+                await Task.Delay(delayA);
 
                 var hash = new FiniteFieldNumber(message.GetHashCode(), G.Order).Value;
                 StepsQueue.Enqueue(("Анна", $"Вычисляет хеш сообщения: {hash}"));
 
-                Thread.Sleep(delayA);
+                await Task.Delay(delayA);
 
                 var signature = GenerateDigitalSignature(G, privateKey, hash, out BigInteger sessionKey);
                 StepsQueue.Enqueue(("Анна", $"Выбирает сеансовый ключ: {sessionKey}"));
 
-                Thread.Sleep(delayA);
+                await Task.Delay(delayA);
 
                 StepsQueue.Enqueue(("Анна", $"Вычисляет цифровую подпись: {signature}"));
 
-                Thread.Sleep(delayA);
+                await Task.Delay(delayA);
 
                 Signature = signature;
                 AnnaSignal.Set();
                 StepsQueue.Enqueue(("Анна", $"Отправляет Борису сообщение и цифровую подпись"));
-
-                Thread.Sleep(delayA);
             });
 
-            Task<bool> boris = Task.Run(() =>
+            Task<bool> boris = Task.Run(async () =>
             {
                 AnnaSignal.WaitOne();
                 var signature = Signature;
                 StepsQueue.Enqueue(("Борис", $"Получает от Анны сообщение и цифровую подпись: {signature}"));
 
-                Thread.Sleep(delayB);
+                await Task.Delay(delayB);
 
                 var publicKey = PublicKey;
                 StepsQueue.Enqueue(("Борис", $"Узнаёт открытый ключ Анны: {publicKey}"));
 
-                Thread.Sleep(delayB);
+                await Task.Delay(delayB);
 
                 var hash = new FiniteFieldNumber(message.GetHashCode(), G.Order).Value;
                 StepsQueue.Enqueue(("Борис", $"Вычисляет хеш сообщения: {hash}"));
-                Thread.Sleep(delayB);
+
+                await Task.Delay(delayB);
 
                 var isVerified = VerifyDigitalSignature(G, signature, publicKey, hash, out ECPoint verificationPoint);
                 StepsQueue.Enqueue(("Борис", $"Вычисляет точку проверки: {verificationPoint}"));
 
-                Thread.Sleep(delayB);
+                await Task.Delay(delayB);
 
                 StepsQueue.Enqueue(("Борис", $"Проверяет цифровую подпись"));
-
-                Thread.Sleep(delayB);
 
                 return isVerified;
             });
 
-            anna.Wait();
-            boris.Wait();
+            await anna;
+            var isVerified = await boris;
 
-            StepsQueue.Enqueue(("", ""));
-            return boris.Result;
+            var result = isVerified ? "Подпись верна" : "Подпись не верна";
+
+            StepsQueue.Enqueue(("", result));
         }
 
         private static (BigInteger r, BigInteger s) GenerateDigitalSignature(ECPoint G, BigInteger privateKey, BigInteger hash, out BigInteger sessionKey)

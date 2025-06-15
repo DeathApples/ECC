@@ -5,13 +5,13 @@ namespace ECC.Core.Models
 {
     internal class EllipticCurve
     {
-        internal static BigInteger A { get; set; } = 2;
+        internal static BigInteger A { get; set; } = -2;
 
         internal static BigInteger B { get; set; } = 3;
 
         internal static BigInteger Prime { get; set; } = 97;
 
-        internal static BigInteger Order { get; set; } = 100;
+        internal static BigInteger Order { get; set; } = 86;
 
         internal static BigInteger Discriminant => (4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2)) % Prime;
 

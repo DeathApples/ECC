@@ -29,7 +29,7 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private void Grid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
         {

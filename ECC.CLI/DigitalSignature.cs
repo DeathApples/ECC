@@ -16,15 +16,9 @@ namespace ECC.CLI
             BorisSteps = []; BorisStepsCount = 0;
 
             Task writer = Task.Run(WriteSteps);
-            var isVerified = ECDSA.Execute(message, EllipticCurve.G, delay);
+            ECDSA.Execute(message, EllipticCurve.G, delay);
 
             writer.Wait();
-
-            Console.SetCursorPosition(0, 0);
-            ConsoleVisualizer.PrintParameters();
-
-            var result = isVerified ? "Подпись верна" : "Подпись не верна";
-            ConsoleVisualizer.DrawTable("Выполнение ECDSA", result, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
         }
 
         private static void WriteSteps()
@@ -34,7 +28,13 @@ namespace ECC.CLI
                 if (ECDSA.StepsQueue.TryDequeue(out (string owner, string action) step))
                 {
                     if (step.owner == string.Empty)
+                    {
+                        Console.SetCursorPosition(0, 0);
+                        ConsoleVisualizer.PrintParameters();
+                        ConsoleVisualizer.DrawTable("Выполнение ECDSA", step.action, [0], [[["Анна"], ["Борис"]], [AnnaSteps, BorisSteps]]);
+
                         break;
+                    }
 
                     if (step.owner == "Анна")
                     {

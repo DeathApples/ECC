@@ -86,15 +86,20 @@
                     <Button Style="{StaticResource RefreshButton}" Command="{Binding GeneratePrimeCommand}" />
                 </StackPanel>
 
-                <Border Grid.Row="2" Grid.ColumnSpan="4" Style="{StaticResource CaptionBorder}">
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="3" Background="#565656" CornerRadius="5, 0, 0, 5" />
-                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 0, 0, 0">
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="4" Margin="40, 8">
+                    <Border Style="{StaticResource CaptionBorder}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="3" Background="#565656" CornerRadius="3, 0, 0, 3" />
                             <TextBlock Style="{StaticResource OrderTextBlock}" Text="{Binding SchoofOrderEllipticCurve}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource CaptionBorder}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="3" Background="#565656" CornerRadius="3, 0, 0, 3" />
                             <TextBlock Style="{StaticResource OrderTextBlock}" Text="{Binding FullEnumerationOrderEllipticCurve}"/>
                         </StackPanel>
-                    </StackPanel>
-                </Border>
+                    </Border>
+                </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.ColumnSpan="4">
                     <Rectangle Margin="40, 0" Height="1" Fill="Gray" />
@@ -165,13 +170,10 @@
                             CommandParameter="S" />
                 </StackPanel>
 
-                <Border Grid.Row="7" Grid.ColumnSpan="4" Margin="40, 8" Padding="0, 0" CornerRadius="0, 8, 8, 0"
-                        Background="#292929">
+                <Border Grid.Row="7" Grid.ColumnSpan="4" Style="{StaticResource CaptionBorder}" Margin="40, 8">
                     <StackPanel Orientation="Horizontal">
                         <Border Width="3" Background="#565656" CornerRadius="3, 0, 0, 3" />
-                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12, 0, 0, 0">
-                            <TextBlock Style="{StaticResource OrderTextBlock}" Text="{Binding OrderPointS}"/>
-                        </StackPanel>
+                        <TextBlock Style="{StaticResource OrderTextBlock}" Text="{Binding OrderPointS}"/>
                     </StackPanel>
                 </Border>
 
