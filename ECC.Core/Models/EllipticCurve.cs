@@ -13,25 +13,28 @@ namespace ECC.Core.Models
 
         internal static BigInteger Order { get; set; } = 100;
 
-        internal static BigInteger Discriminant => 4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2);
+        internal static BigInteger Discriminant => (4 * BigInteger.Pow(A, 3) + 27 * BigInteger.Pow(B, 2)) % Prime;
 
         internal static bool TryGetBasePoint(out EllipticCurvePoint basePoint)
         {
             var divisors = GetDivisorsOfOrder();
+            var xList = Enumerable.Range(0, (int)Prime).ToList();
 
-            basePoint = EllipticCurvePoint.Infinite;
-            BigInteger subgroupOrder = 0, x = 0;
+            BigInteger subgroupOrder = 0;
+            int index;
+            bool hasFound;
 
-            while (subgroupOrder < Order / 3)
+            do
             {
                 do
                 {
-                    basePoint = GetPointByX(x);
-                    x++;
+                    index = System.Security.Cryptography.RandomNumberGenerator.GetInt32(xList.Count);
+                    hasFound = TryGetPointByX(xList[index], out basePoint);
+                    xList.RemoveAt(index);
                 }
-                while (basePoint.IsInfinite && x < Prime);
+                while (!hasFound && xList.Count > 0);
 
-                if (x == Prime)
+                if (xList.Count == 0)
                     return false;
 
                 foreach (var divisor in divisors)
@@ -45,6 +48,7 @@ namespace ECC.Core.Models
                     }
                 }
             }
+            while (subgroupOrder < Order / 3);
 
             basePoint.Order = subgroupOrder;
             return true;
@@ -71,7 +75,7 @@ namespace ECC.Core.Models
             return divisors;
         }
 
-        internal static EllipticCurvePoint GetPointByX(BigInteger x)
+        internal static bool TryGetPointByX(BigInteger x, out EllipticCurvePoint point)
         {
             var xFF = new FiniteFieldNumber(x, Prime);
             var xPart = FiniteFieldNumber.Pow(xFF, 3) + A * xFF + B;
@@ -79,10 +83,18 @@ namespace ECC.Core.Models
             if (LegendreSymbol.Compute(xPart.Value, Prime) == 1)
             {
                 var y = TonelliShanksAlgorithm.GetSquareRoot(xPart.Value, Prime);
-                return new(x, y);
+                point = new(x, y);
+                return true;
             }
 
-            return EllipticCurvePoint.Infinite;
+            else if (xPart.Value == 0)
+            {
+                point = new(x, 0);
+                return true;
+            }
+
+            point = EllipticCurvePoint.Infinite;
+            return false;
         }
     }
 }

@@ -255,7 +255,7 @@ namespace ECC.GUI.ViewModels
             {
                 a = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
                 b = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
-            } while (!ECurve.GenerateEllipticCurve(a, b, ECurve.Prime));
+            } while (!ECurve.TryGenerateEllipticCurve(a, b, ECurve.Prime));
 
             ParameterA = ECurve.A.ToString();
             ParameterB = ECurve.B.ToString();

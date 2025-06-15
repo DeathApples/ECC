@@ -11,25 +11,26 @@ namespace ECC.Core
         public static BigInteger A
         {
             get => EllipticCurve.A;
-            set => GenerateEllipticCurve(value, EllipticCurve.B, EllipticCurve.Prime);
+            set => TryGenerateEllipticCurve(value, EllipticCurve.B, EllipticCurve.Prime);
         }
 
         public static BigInteger B
         {
             get => EllipticCurve.B;
-            set => GenerateEllipticCurve(EllipticCurve.A, value, EllipticCurve.Prime);
+            set => TryGenerateEllipticCurve(EllipticCurve.A, value, EllipticCurve.Prime);
         }
 
         public static BigInteger Prime
         {
             get => EllipticCurve.Prime;
-            set => GenerateEllipticCurve(EllipticCurve.A, EllipticCurve.B, value);
+            set => TryGenerateEllipticCurve(EllipticCurve.A, EllipticCurve.B, value);
         }
 
         public static BigInteger Order => EllipticCurve.Order;
+
         public static BigInteger Discriminant => EllipticCurve.Discriminant;
 
-        public static bool GenerateEllipticCurve(BigInteger a, BigInteger b, BigInteger p)
+        public static bool TryGenerateEllipticCurve(BigInteger a, BigInteger b, BigInteger p)
         {
             var tempA = EllipticCurve.A; EllipticCurve.A = a;
             var tempB = EllipticCurve.B; EllipticCurve.B = b;
@@ -47,6 +48,27 @@ namespace ECC.Core
             EllipticCurve.Order = SchoofAlgorithm.GetPointsCount();
             EllipticCurveChanged?.Invoke();
             return true;
+        }
+
+        public static List<ECPoint> GetPoints()
+        {
+            var points = new List<ECPoint>();
+
+            for (BigInteger x = 0; x < Prime; x++)
+            {
+                if (EllipticCurve.TryGetPointByX(x, out EllipticCurvePoint point))
+                {
+                    points.Add(new(point.X.Value, point.Y.Value));
+
+                    if (point.Y.Value != 0)
+                    {
+                        var oppositePoint = -point;
+                        points.Add(new(oppositePoint.X.Value, oppositePoint.Y.Value));
+                    }
+                }
+            }
+
+            return points;
         }
 
         public static bool TryGetBasePoint(out ECPoint G)

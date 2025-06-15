@@ -15,7 +15,8 @@ namespace ECC.Core
         public static (ECPoint, ECPoint) Execute(ECPoint G, int delay = 0)
         {
             int delayA = 0, delayB = 0;
-            if(delay != 0)
+
+            if (delay != 0)
             {
                 delayA = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;
                 delayB = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-delay / 2, delay / 2 + 1) + delay;

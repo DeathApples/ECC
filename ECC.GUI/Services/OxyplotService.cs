@@ -3,7 +3,6 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 using ECC.Core;
-using System.Numerics;
 
 namespace ECC.GUI.Services
 {
@@ -133,6 +132,8 @@ namespace ECC.GUI.Services
         {
             tablePlotModel.Series.Clear();
 
+            var points = ECurve.GetPoints().ConvertAll(point => new ScatterPoint((int)point.X, (int)point.Y));
+
             var scatterSeries = new ScatterSeries
             {
                 MarkerFill = OxyColors.Transparent, 
@@ -141,26 +142,7 @@ namespace ECC.GUI.Services
                 MarkerSize = 3
             };
 
-            BigInteger a = ECurve.A, b = ECurve.B, p = ECurve.Prime;
-
-            for (BigInteger y = 0; y < p; y++)
-            {
-                var leftSide = y * y % p;
-
-                if (leftSide < 0)
-                    leftSide += p;
-
-                for (BigInteger x = 0; x < p; x++)
-                {
-                    var rightSide = (x * x * x + a * x + b) % p;
-
-                    if (rightSide < 0)
-                        rightSide += p;
-
-                    if (leftSide == rightSide)
-                        scatterSeries.Points.Add(new ScatterPoint((int)x, (int)y));
-                }
-            }
+            scatterSeries.Points.AddRange(points);
 
             tablePlotModel.Series.Add(scatterSeries);
         }
