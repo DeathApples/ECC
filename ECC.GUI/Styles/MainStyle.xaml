@@ -41,6 +41,27 @@
 
 
 
+    <Style x:Key="HeaderTextBlock" TargetType="TextBlock">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="LightGray" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Margin" Value="32, 0, 0, 4" />
+            <Setter Property="FontSize" Value="14" />
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="VersionTextBlock" TargetType="TextBlock">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="LightGray" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Margin" Value="0, 24" />
+        </Style.Setters>
+    </Style>
+
+
+
     <Style x:Key="TabRadioButton" TargetType="RadioButton">
         <Style.Setters>
 
@@ -64,7 +85,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="8">
                             <StackPanel>
-                                <Image Margin=" 0, 15, 0, 15" />
+                                <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Height="36" Margin=" 0, 6, 0, -12" />
                                 <TextBlock Text="{TemplateBinding ContentStringFormat}"  />
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
@@ -107,7 +128,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#424242"/>
+                <Setter Property="Background" Value="#363636" />
                 <Setter Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
@@ -153,6 +174,23 @@
                             </StackPanel>
                         </Border>
                     </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+
+
+    <Style x:Key="IconImage" TargetType="Image">
+        <Style.Setters>
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Margin" Value="8, 0, 0, 0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Source">
+                <Setter.Value>
+                    <BitmapImage UriSource="/Resources/icon.ico" DecodePixelWidth="16" DecodePixelHeight="16"/>
                 </Setter.Value>
             </Setter>
         </Style.Setters>

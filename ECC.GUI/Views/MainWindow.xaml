@@ -9,7 +9,8 @@
         
         WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" Background="Transparent" Height="930" Width="1200"
-        Title="Алгоритм Диффи-Хеллмана на Эллиптических кривых">
+        Title="Криптография на эллиптических кривых"
+        Icon="/Resources/icon.ico">
 
     <Window.DataContext>
         <vm:MainViewModel />
@@ -38,10 +39,15 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource HeaderBorder}" MouseDown="Header_MouseDown">
-                <StackPanel Grid.Column="0" Style="{StaticResource HeaderStackPanel}">
-                    <Button Style="{StaticResource CollapseButton}" Click="CollapseButton_Click" />
-                    <Button Style="{StaticResource CloseButton}" Click="CloseButton_Click" />
-                </StackPanel>
+                <Grid>
+                    <StackPanel Grid.Column="0" Style="{StaticResource HeaderStackPanel}">
+                        <Button Style="{StaticResource CollapseButton}" Click="CollapseButton_Click" />
+                        <Button Style="{StaticResource CloseButton}" Click="CloseButton_Click" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}"
+                               Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <Image Style="{StaticResource IconImage}" />
+                </Grid>
             </Border>
 
             <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource TabsBorder}">
@@ -49,17 +55,19 @@
                     <RadioButton Style="{StaticResource TabRadioButton}" Content="Visual"
                         IsChecked="{Binding CurrentPageEnum, 
                         Converter={StaticResource PageConverter}, 
-                        ConverterParameter=0}" />
+                        ConverterParameter=0}" Tag="\Resources\function.png" />
                     <RadioButton Style="{StaticResource TabRadioButton}" Content="ECDH"
                         IsChecked="{Binding CurrentPageEnum, 
                         Converter={StaticResource PageConverter}, 
-                        ConverterParameter=1}" />
+                        ConverterParameter=1}" Tag="\Resources\key.png" />
                     <RadioButton Style="{StaticResource TabRadioButton}" Content="ECDSA"
                         IsChecked="{Binding CurrentPageEnum, 
                         Converter={StaticResource PageConverter}, 
-                        ConverterParameter=2}" />
+                        ConverterParameter=2}" Tag="\Resources\certificate.png" />
                 </StackPanel>
             </Border>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource VersionTextBlock}" Text="Version 1.0.2" />
 
             <Frame Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden"
                    Content="{Binding CurrentPage}" />
