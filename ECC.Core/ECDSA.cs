@@ -53,14 +53,14 @@ namespace ECC.Core
 
                 Signature = signature;
                 AnnaSignal.Set();
-                StepsQueue.Enqueue(("Анна", $"Отправляет Борису сообщение и цифровую подпись"));
+                StepsQueue.Enqueue(("Анна", $"Отправляет Борису подписанное сообщение"));
             });
 
             Task<bool> boris = Task.Run(async () =>
             {
                 AnnaSignal.WaitOne();
                 var signature = Signature;
-                StepsQueue.Enqueue(("Борис", $"Получает от Анны сообщение и цифровую подпись: {signature}"));
+                StepsQueue.Enqueue(("Борис", $"Получает от Анны подписанное сообщение: {signature}"));
 
                 await Task.Delay(delayB);
 
@@ -87,7 +87,9 @@ namespace ECC.Core
             await anna;
             var isVerified = await boris;
 
-            var result = isVerified ? "Подпись верна" : "Подпись не верна";
+            var result = isVerified 
+                ? $"Анна создала корректную подпись {Signature}. Борис смог её верифицировать" 
+                : "Не удалось создать корректную цифровую подпись";
 
             StepsQueue.Enqueue(("", result));
         }

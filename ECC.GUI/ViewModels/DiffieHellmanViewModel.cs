@@ -131,7 +131,7 @@ namespace ECC.GUI.ViewModels
             set => SetProperty(ref _orderPointG, value);
         }
 
-        private List<DelayItem> _delayList = [new(), new(500), new(1000), new(1500)];
+        private List<DelayItem> _delayList = [new(), new(500), new(1000), new(2000)];
         public List<DelayItem> DelayList
         {
             get => _delayList;
@@ -188,10 +188,14 @@ namespace ECC.GUI.ViewModels
         public ICommand StartProtocolCommand { get; }
         private void OnStartProtocolCommandExecuted(object? parameter)
         {
-            if (_pointG.Order >= ECurve.Prime / 3 && ECurve.Prime != ECurve.Order)
+            ResultProtocol = string.Empty;
+            AnnaSteps.Clear(); BorisSteps.Clear();
+
+            if (_pointG.IsOnCurve && _pointG.Order >= ECurve.Prime / 3 && ECurve.Prime != ECurve.Order && MillerRabinPrimalityTest.IsPrimeNumber(_pointG.Order))
             {
-                ResultProtocol = string.Empty;
-                AnnaSteps.Clear(); BorisSteps.Clear();
+                ParameterA = ECurve.A.ToString();
+                ParameterB = ECurve.B.ToString();
+                PrimeNumber = ECurve.Prime.ToString();
 
                 Task.Run(WriteSteps);
                 ECDH.Execute(_pointG, SelectedDelay.Value);

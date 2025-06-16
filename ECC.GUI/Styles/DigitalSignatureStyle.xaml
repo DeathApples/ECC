@@ -2,25 +2,46 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-    <Style x:Key="MainBorder" TargetType="Border">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Styles/DiffieHellmanStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+    <Style x:Key="MessageBorder" TargetType="Border" BasedOn="{StaticResource ActionBorder}">
         <Style.Setters>
-            <Setter Property="CornerRadius" Value="12" />
-            <Setter Property="Margin" Value="0, 15, 15, 15" />
-            <Setter Property="Background" Value="#323232" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Margin" Value="12, 0, 0, 0" />
+            <Setter Property="Padding" Value="6" />
+            <Setter Property="Height" Value="36" />
         </Style.Setters>
     </Style>
 
 
 
-    <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+    <Style x:Key="MessageTextBlock" TargetType="TextBlock">
         <Style.Setters>
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="Margin" Value="8, 0" />
+            <Setter Property="FontSize" Value="16" />
+        </Style.Setters>
+    </Style>
+
+
+
+    <Style x:Key="MessageTextBox" TargetType="TextBox">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="Snow" />
-            <Setter Property="FontSize" Value="47" />
+            <Setter Property="CaretBrush" Value="Snow" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="8, 0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
         </Style.Setters>
     </Style>
-    
-    
-    
+
+
+
 </ResourceDictionary>
