@@ -82,7 +82,7 @@ namespace ECC.Core.Models
 
             if (LegendreSymbol.Compute(xPart.Value, Prime) == 1)
             {
-                var y = TonelliShanksAlgorithm.GetSquareRoot(xPart.Value, Prime);
+                var y = TonelliShanksAlgorithm.GetSquareRoot(xPart.Value, Prime) * BigInteger.Pow(-1, new Random().Next(2));
                 point = new(x, y);
                 return true;
             }

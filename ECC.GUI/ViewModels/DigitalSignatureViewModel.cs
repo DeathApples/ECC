@@ -178,7 +178,7 @@ namespace ECC.GUI.ViewModels
             {
                 a = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
                 b = System.Security.Cryptography.RandomNumberGenerator.GetInt32(-16, 16);
-            } while (!ECurve.TryGenerateEllipticCurve(a, b, ECurve.Prime) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
+            } while (!ECurve.TryGenerateEllipticCurve(a, b, ECurve.Prime) || !ECurve.TryGetBasePoint(out ECPoint G) || ECurve.Prime == ECurve.Order || G.Order <= 3);
 
             ParameterA = ECurve.A.ToString();
             ParameterB = ECurve.B.ToString();
@@ -192,7 +192,7 @@ namespace ECC.GUI.ViewModels
             do
             {
                 p = MillerRabinPrimalityTest.GetPrimeNumber();
-            } while (!ECurve.TryGenerateEllipticCurve(ECurve.A, ECurve.B, p) || !ECurve.TryGetBasePoint(out ECPoint _) || ECurve.Prime == ECurve.Order);
+            } while (!ECurve.TryGenerateEllipticCurve(ECurve.A, ECurve.B, p) || !ECurve.TryGetBasePoint(out ECPoint G) || ECurve.Prime == ECurve.Order || G.Order <= 3);
 
             PrimeNumber = ECurve.Prime.ToString();
         }
@@ -209,7 +209,7 @@ namespace ECC.GUI.ViewModels
             ResultProtocol = string.Empty;
             AnnaSteps.Clear(); BorisSteps.Clear();
 
-            if (_pointG.IsOnCurve && _pointG.Order >= ECurve.Prime / 3 && ECurve.Prime != ECurve.Order && MillerRabinPrimalityTest.IsPrimeNumber(_pointG.Order))
+            if (_pointG.IsOnCurve && _pointG.Order >= ECurve.Prime / 3 && ECurve.Prime != ECurve.Order && MillerRabinPrimalityTest.IsPrimeNumber(_pointG.Order) && _pointG.Order > 3)
             {
                 ParameterA = ECurve.A.ToString();
                 ParameterB = ECurve.B.ToString();
